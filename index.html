@@ -11,8 +11,11 @@
       background: #f0f0f0;
       padding: 50px;
     }
-    h1 {
-      color: #333;
+    input {
+      padding: 10px;
+      margin: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
     }
     button {
       padding: 10px 20px;
@@ -25,11 +28,26 @@
     button:hover {
       background: #005fcc;
     }
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+      color: #333;
+    }
   </style>
 </head>
 <body>
-  <h1>Selamat datang di Capy Tool 🦦</h1>
-  <p>Website pertamamu sudah aktif!</p>
-  <button onclick="alert('Hai icibos! Tool-mu siap dikembangkan 🚀')">Klik aku</button>
+  <h1>Capy Level Calculator 🦦</h1>
+
+  <label>Level Sekarang:</label><br>
+  <input type="number" id="current"><br>
+
+  <label>Target Level:</label><br>
+  <input type="number" id="target"><br>
+
+  <button onclick="showResult()">Hitung</button>
+
+  <div id="result"></div>
+
+  <script src="script.js"></script>
 </body>
 </html>
