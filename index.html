@@ -1,228 +1,327 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Capy Workbench Calculator 😎</title>
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #f0f0f0, #dfe9f3);
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capy Workbench Calculator 😎</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f0f0f0, #dfe9f3);
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      /* Tinggi disesuaikan agar tidak ada scroll saat di HP */
+      min-height: 100vh; 
+      padding: 20px 10px 80px 10px; /* Tambahan padding bawah untuk footer */
+      box-sizing: border-box;
+    }
+
+    h1 {
+      font-size: 24px; /* Sedikit dikecilkan */
+      color: #ff7300;
+      margin-bottom: 15px; /* Jarak dikurangi */
+      letter-spacing: 1px;
+      text-shadow: 0 0 5px rgba(255,115,0,0.4);
+      text-align: center;
+    }
+
+    .container {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      padding: 15px; /* Padding dikurangi */
+      display: flex;
+      flex-wrap: wrap; /* Wajib untuk responsif: agar elemen turun ke bawah jika layar kecil */
+      gap: 20px; /* Jarak antar section dikurangi */
+      max-width: 1000px; /* Maksimum lebar untuk desktop */
+      width: 100%;
       justify-content: center;
-      height: 100vh;
+    }
+
+    .section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #eee; /* Tambahkan garis pemisah */
+      flex: 1 1 300px; /* Ini kunci Flexbox: setiap section minimal 300px, dan fleksibel */
+    }
+
+    .section-title {
+      color: #ff7300;
+      margin-bottom: 10px;
+      font-size: 16px; /* Sedikit lebih kecil */
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .columns {
+      display: flex;
+      gap: 10px; /* Jarak kolom dikurangi */
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .column {
+      display: flex;
+      flex-direction: column;
+      gap: 4px; /* Jarak row dikurangi */
+      align-items: center;
+      flex: 1 1 180px; /* Fleksibilitas kolom */
+      min-width: 150px;
+      margin: 0 5px;
+    }
+
+    .column h3 {
+      margin-bottom: 5px; /* Jarak dikurangi */
+      color: #0084ff;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 5px; /* Jarak label dan input dikurangi */
+      width: 100%;
+    }
+
+    label {
+      font-weight: 500; /* Dibuat sedikit lebih tipis */
+      font-size: 11px; /* Lebih kecil agar muat */
+      width: 70px; /* Dikecilkan */
+      text-align: right;
+    }
+
+    input {
+      width: 50px; /* Lebih kecil untuk HP */
+      padding: 3px; /* Padding dikurangi */
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      text-align: center;
+      font-size: 11px;
+    }
+
+    /* RESULT SECTION */
+    .section:last-child {
+        flex-direction: row; /* Tampilkan Result secara horizontal di desktop */
+        gap: 40px;
+        padding: 15px 30px;
+        flex: 1 1 300px;
+    }
+    
+    .section:last-child .section-title {
+        display: none; /* Hilangkan Title di Result Section karena kolomnya sudah ada judul */
     }
 
-    h1 {
-      font-size: 26px;
-      color: #ff7300;
-      margin-bottom: 20px;
-      letter-spacing: 1px;
-      text-shadow: 0 0 5px rgba(255,115,0,0.4);
-    }
+    .result-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
 
-    .container {
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
-      padding: 25px 35px;
-      display: flex;
-      gap: 60px;
-      margin-bottom: 25px;
-    }
+    .result-value {
+      background: #f5f5f5;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      width: 80px; /* Dikecilkan */
+      text-align: center;
+      padding: 5px 0;
+      font-weight: bold;
+      font-size: 14px;
+      transition: all 0.3s ease; /* Transisi agar efek warna lebih halus */
+    }
 
-    .section {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+    footer {
+      position: fixed;
+      bottom: 0; /* Diposisikan di paling bawah */
+      left: 0;
+      width: 100%;
+      font-size: 12px;
+      color: #0084ff;
+      text-align: center;
+      animation: glow 3s ease-in-out infinite alternate;
+      text-shadow: 0 0 10px rgba(0,132,255,0.6), 0 0 20px rgba(255,115,0,0.5);
+      letter-spacing: 1px;
+      background: rgba(255, 255, 255, 0.9); /* Background lebih solid */
+      padding: 8px 10px;
+      border-top: 1px solid #ccc;
+      backdrop-filter: blur(5px);
+      z-index: 9999;
+      box-sizing: border-box;
+      transform: none; /* Hapus transform X */
+    }
 
-    .section-title {
-      color: #ff7300;
-      margin-bottom: 10px;
-      font-size: 18px;
-      font-weight: bold;
-      text-align: center;
-    }
+    @keyframes glow {
+      /* ... (keyframes tetap sama) ... */
+      from {
+        text-shadow: 0 0 5px rgba(0,132,255,0.4), 0 0 10px rgba(255,115,0,0.3);
+        transform: scale(1);
+      }
+      to {
+        text-shadow: 0 0 20px rgba(0,132,255,0.8), 0 0 30px rgba(255,115,0,0.6);
+        transform: scale(1.03);
+      }
+    }
+    
+    /* ============================================== */
+    /* MEDIA QUERY: Tampilan HP (Lebar maksimal 600px) */
+    /* ============================================== */
+    @media (max-width: 600px) {
+        
+        /* Container akan disusun vertikal di HP */
+        .container {
+            flex-direction: column;
+            gap: 15px;
+            padding: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
 
-    .columns {
-      display: flex;
-      gap: 40px;
-    }
+        /* Section Owned Items (paling besar) */
+        .section:first-child { 
+            order: 1; /* Urutan: Owned Items */
+        }
 
-    .column {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      align-items: center;
-    }
+        /* Section Target Item */
+        .section:nth-child(2) {
+            order: 2; /* Urutan: Target Item */
+        }
+        
+        /* Section Result */
+        .section:last-child {
+            order: 3; /* Urutan: Result */
+            flex-direction: row;
+            justify-content: space-around;
+            padding: 10px;
+            margin-top: 10px;
+            border: 2px solid #0084ff; /* Kasih highlight Result di HP */
+        }
+        
+        /* Kolom Owned Items dan Fodder akan dipaksa bersebelahan di HP */
+        .section:first-child .columns {
+            flex-wrap: nowrap;
+            gap: 10px;
+            justify-content: space-between;
+        }
 
-    .column h3 {
-      margin-bottom: 8px;
-      color: #0084ff;
-      text-align: center;
-    }
+        .columns {
+            width: 100%;
+        }
 
-    .row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      width: 180px;
-    }
+        .column {
+            flex: 1 1 45%; /* Setiap kolom ambil 45% lebar */
+            min-width: unset;
+        }
+        
+        .row {
+            width: 100%;
+        }
 
-    label {
-      font-weight: bold;
-      font-size: 13px;
-      width: 90px;
-      text-align: right;
-    }
+        /* Label dan Input disesuaikan lagi untuk layar sempit */
+        label {
+            font-size: 10px;
+            width: 65px;
+        }
 
-    input {
-      width: 70px;
-      padding: 5px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      text-align: center;
+        input {
+            width: 40px;
+            padding: 2px;
+            font-size: 10px;
+        }
+        
+        /* Tampilan Result di HP */
+        .section:last-child h3 {
+             font-size: 13px;
+        }
+        .result-value {
+             width: 60px;
+             font-size: 12px;
+        }
     }
-
-    .result-box {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .result-value {
-      background: #f5f5f5;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      width: 100px;
-      text-align: center;
-      padding: 8px 0;
-      font-weight: bold;
-      font-size: 15px;
-    }
-
-    footer {
-      position: fixed;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: fit-content;
-      font-size: 14px;
-      color: #0084ff;
-      text-align: center;
-      animation: glow 3s ease-in-out infinite alternate;
-      text-shadow: 0 0 10px rgba(0,132,255,0.6), 0 0 20px rgba(255,115,0,0.5);
-      letter-spacing: 1px;
-      background: rgba(255, 255, 255, 0.7);
-      padding: 6px 14px;
-      border-radius: 10px;
-      backdrop-filter: blur(8px);
-      z-index: 9999;
-    }
-
-    @keyframes glow {
-      from {
-        text-shadow: 0 0 5px rgba(0,132,255,0.4), 0 0 10px rgba(255,115,0,0.3);
-        transform: scale(1);
-      }
-      to {
-        text-shadow: 0 0 20px rgba(0,132,255,0.8), 0 0 30px rgba(255,115,0,0.6);
-        transform: scale(1.03);
-      }
-    }
-  </style>
+  </style>
 </head>
-
-<script src="script.js"></script>
-
 <body>
-  <h1>Capy Workbench Calculator 🦦</h1>
+  <h1>Capy Workbench Calculator 🦦</h1>
 
-  <div class="container">
-    <!-- OWNED ITEMS -->
-    <div class="section">
-      <div class="section-title">Owned Items</div>
-      <div class="columns">
-        <!-- S-ITEM -->
-        <div class="column">
-          <h3>S-Item</h3>
-          <div class="row"><label>Epic +0:</label><input type="number"></div>
-          <div class="row"><label>Epic +1:</label><input type="number"></div>
-          <div class="row"><label>Epic +2:</label><input type="number"></div>
-          <div class="row"><label>Legend +0:</label><input type="number"></div>
-          <div class="row"><label>Legend +1:</label><input type="number"></div>
-          <div class="row"><label>Legend +2:</label><input type="number"></div>
-          <div class="row"><label>Legend +3:</label><input type="number"></div>
-          <div class="row"><label>Mythic +0:</label><input type="number"></div>
-          <div class="row"><label>Mythic +1:</label><input type="number"></div>
-          <div class="row"><label>Mythic +2:</label><input type="number"></div>
-          <div class="row"><label>Mythic +3:</label><input type="number"></div>
-          <div class="row"><label>Mythic +4:</label><input type="number"></div>
-        </div>
+  <div class="container">
+        <div class="section">
+      <div class="section-title">Owned Items</div>
+      <div class="columns">
+                <div class="column">
+          <h3>S-Item</h3>
+          <div class="row"><label>Epic +0:</label><input type="number"></div>
+          <div class="row"><label>Epic +1:</label><input type="number"></div>
+          <div class="row"><label>Epic +2:</label><input type="number"></div>
+          <div class="row"><label>Legend +0:</label><input type="number"></div>
+          <div class="row"><label>Legend +1:</label><input type="number"></div>
+          <div class="row"><label>Legend +2:</label><input type="number"></div>
+          <div class="row"><label>Legend +3:</label><input type="number"></div>
+          <div class="row"><label>Mythic +0:</label><input type="number"></div>
+          <div class="row"><label>Mythic +1:</label><input type="number"></div>
+          <div class="row"><label>Mythic +2:</label><input type="number"></div>
+          <div class="row"><label>Mythic +3:</label><input type="number"></div>
+          <div class="row"><label>Mythic +4:</label><input type="number"></div>
+        </div>
 
-        <!-- FODDER -->
-        <div class="column">
-          <h3>Fodder</h3>
-          <div class="row"><label>Epic +0:</label><input type="number"></div>
-          <div class="row"><label>Epic +1:</label><input type="number"></div>
-          <div class="row"><label>Epic +2:</label><input type="number"></div>
-          <div class="row"><label>Legend +0:</label><input type="number"></div>
-          <div class="row"><label>Legend +1:</label><input type="number"></div>
-          <div class="row"><label>Legend +2:</label><input type="number"></div>
-          <div class="row"><label>Legend +3:</label><input type="number"></div>
-          <div class="row"><label>Mythic +0:</label><input type="number"></div>
-          <div class="row"><label>Mythic +1:</label><input type="number"></div>
-          <div class="row"><label>Mythic +2:</label><input type="number"></div>
-          <div class="row"><label>Mythic +3:</label><input type="number"></div>
-          <div class="row"><label>Mythic +4:</label><input type="number"></div>
-        </div>
-      </div>
-    </div>
+                <div class="column">
+          <h3>Fodder</h3>
+          <div class="row"><label>Epic +0:</label><input type="number"></div>
+          <div class="row"><label>Epic +1:</label><input type="number"></div>
+          <div class="row"><label>Epic +2:</label><input type="number"></div>
+          <div class="row"><label>Legend +0:</label><input type="number"></div>
+          <div class="row"><label>Legend +1:</label><input type="number"></div>
+          <div class="row"><label>Legend +2:</label><input type="number"></div>
+          <div class="row"><label>Legend +3:</label><input type="number"></div>
+          <div class="row"><label>Mythic +0:</label><input type="number"></div>
+          <div class="row"><label>Mythic +1:</label><input type="number"></div>
+          <div class="row"><label>Mythic +2:</label><input type="number"></div>
+          <div class="row"><label>Mythic +3:</label><input type="number"></div>
+          <div class="row"><label>Mythic +4:</label><input type="number"></div>
+        </div>
+      </div>
+    </div>
 
-    <!-- TARGET ITEM -->
-    <div class="section">
-      <div class="section-title">Target Item</div>
-      <div class="columns">
-        <div class="column">
-          <h3>S-Item</h3>
-          <div class="row"><label>Epic +0:</label><input type="number"></div>
-          <div class="row"><label>Epic +1:</label><input type="number"></div>
-          <div class="row"><label>Epic +2:</label><input type="number"></div>
-          <div class="row"><label>Legend +0:</label><input type="number"></div>
-          <div class="row"><label>Legend +1:</label><input type="number"></div>
-          <div class="row"><label>Legend +2:</label><input type="number"></div>
-          <div class="row"><label>Legend +3:</label><input type="number"></div>
-          <div class="row"><label>Mythic +0:</label><input type="number"></div>
-          <div class="row"><label>Mythic +1:</label><input type="number"></div>
-          <div class="row"><label>Mythic +2:</label><input type="number"></div>
-          <div class="row"><label>Mythic +3:</label><input type="number"></div>
-          <div class="row"><label>Mythic +4:</label><input type="number"></div>
-        </div>
-      </div>
-    </div>
+        <div class="section">
+      <div class="section-title">Target Item</div>
+      <div class="columns">
+        <div class="column">
+          <h3>S-Item</h3>
+          <div class="row"><label>Epic +0:</label><input type="number"></div>
+          <div class="row"><label>Epic +1:</label><input type="number"></div>
+          <div class="row"><label>Epic +2:</label><input type="number"></div>
+          <div class="row"><label>Legend +0:</label><input type="number"></div>
+          <div class="row"><label>Legend +1:</label><input type="number"></div>
+          <div class="row"><label>Legend +2:</label><input type="number"></div>
+          <div class="row"><label>Legend +3:</label><input type="number"></div>
+          <div class="row"><label>Mythic +0:</label><input type="number"></div>
+          <div class="row"><label>Mythic +1:</label><input type="number"></div>
+          <div class="row"><label>Mythic +2:</label><input type="number"></div>
+          <div class="row"><label>Mythic +3:</label><input type="number"></div>
+          <div class="row"><label>Mythic +4:</label><input type="number"></div>
+        </div>
+      </div>
+    </div>
 
-    <!-- RESULT -->
-    <div class="section">
-      <div class="section-title">Result</div>
-      <div class="columns">
-        <div class="column">
-          <h3>S-Item</h3>
-          <div class="result-box"><div class="result-value" id="r_sitem">0</div></div>
-        </div>
-        <div class="column">
-          <h3>Fodder</h3>
-          <div class="result-box"><div class="result-value" id="r_fodder">0</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
+        <div class="section">
+      <div class="section-title">Result</div>
+      <div class="columns">
+        <div class="column">
+          <h3>S-Item Needed</h3>
+          <div class="result-box"><div class="result-value" id="r_sitem">0</div></div>
+        </div>
+        <div class="column">
+          <h3>Fodder Needed</h3>
+          <div class="result-box"><div class="result-value" id="r_fodder">0</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <footer>Made with ❤️ by Hngg & 4KING 😎</footer>
-</body>
+  <footer>Made with ❤️ by Hngg & 4KING 😎</footer>
+  </body>
 </html>
