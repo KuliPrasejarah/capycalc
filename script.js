@@ -1,15 +1,4 @@
-/**
- * Capy Workbench Calculator - script.js (V3: Explicit Call)
- *
- * Logika perhitungan:
- * - Setiap input dipanggil satu per satu menggunakan ID eksplisit.
- * - Ini membuat kode sangat mudah dibaca, di-debug, dan diubah perhitungannya.
- */
-
-// 1. Tabel Konversi (Data sumber tetap sama)
-// Item S-Item: [S-Item Value, Fodder Value] dalam satuan Epic +0.
 const CONVERSION_TABLE = {
-    // Tier: [S-Item Value, Fodder Value]
     'Epic +0': [1, 0],
     'Epic +1': [1, 1],
     'Epic +2': [1, 3],
@@ -24,40 +13,23 @@ const CONVERSION_TABLE = {
     'Mythic +4': [90, 630]
 };
 
-/**
- * Fungsi Pembantu: Memastikan nilai dari input adalah integer non-negatif.
- * Ini adalah 'Best Practice' biar kalkulator gak crash kalau user input teks.
- * @param {string} id - ID element input.
- * @returns {number} - Nilai integer non-negatif.
- */
 function getInputValue(id) {
     const element = document.getElementById(id);
     if (element) {
-        // parseInt(element.value, 10) -> Mengambil nilai dan mengubah ke angka basis 10.
-        // || 0 -> Kalau nilai kosong (NaN), anggap saja 0.
-        // Math.max(0, ...) -> Memastikan nilainya tidak minus (karena jumlah item gak mungkin minus).
         return Math.max(0, parseInt(element.value, 10) || 0);
     }
     return 0;
 }
 
-/**
- * Pemasangan ID dan Event Listener.
- * Karena kita mau sangat detail, kita pastikan setiap input sudah punya ID.
- * Di versi ini, kita biarkan fungsi ini saja yang pakai loop, karena cuma untuk setup.
- */
 function setupInputListeners() {
-    const TIERS = Object.keys(CONVERSION_TABLE); // Ambil semua nama Tier
-
-    // 1. OWNED ITEMS - S-Item
+    const TIERS = Object.keys(CONVERSION_TABLE);
     const ownedSitemInputs = document.querySelectorAll('.section:nth-child(1) .columns .column:nth-child(1) input');
     TIERS.forEach((tier, index) => {
-        const tierId = tier.replace(/\s/g, '').replace('+', ''); // Contoh: 'Epic +0' jadi 'Epic0'
+        const tierId = tier.replace(/\s/g, '').replace('+', '');
         ownedSitemInputs[index].id = `owned_sitem_${tierId}`;
-        ownedSitemInputs[index].addEventListener('input', calculate); // Tambahkan Listener
+        ownedSitemInputs[index].addEventListener('input', calculate);
     });
 
-    // 2. OWNED ITEMS - Fodder
     const ownedFodderInputs = document.querySelectorAll('.section:nth-child(1) .columns .column:nth-child(2) input');
     TIERS.forEach((tier, index) => {
         const tierId = tier.replace(/\s/g, '').replace('+', '');
@@ -65,7 +37,6 @@ function setupInputListeners() {
         ownedFodderInputs[index].addEventListener('input', calculate);
     });
 
-    // 3. TARGET ITEMS - S-Item
     const targetSitemInputs = document.querySelectorAll('.section:nth-child(2) .columns .column:nth-child(1) input');
     TIERS.forEach((tier, index) => {
         const tierId = tier.replace(/\s/g, '').replace('+', '');
@@ -74,18 +45,7 @@ function setupInputListeners() {
     });
 }
 
-
-/**
- * Fungsi Utama Perhitungan (Logic Inti!)
- * Di sini kita akan lihat setiap baris perhitungan S-Item dan Fodder.
- */
 function calculate() {
-    
-    // =========================================================================
-    // BAGIAN 1: MENGAMBIL SEMUA NILAI INPUT DARI HTML (Inilah yang Paling Manual!)
-    // =========================================================================
-
-    // A. OWNED S-ITEM Quantities
     const qsOwnedSitemE0 = getInputValue('owned_sitem_Epic0');
     const qsOwnedSitemE1 = getInputValue('owned_sitem_Epic1');
     const qsOwnedSitemE2 = getInputValue('owned_sitem_Epic2');
@@ -99,7 +59,6 @@ function calculate() {
     const qsOwnedSitemM3 = getInputValue('owned_sitem_Mythic3');
     const qsOwnedSitemM4 = getInputValue('owned_sitem_Mythic4');
 
-    // B. OWNED FODDER Quantities
     const qfOwnedFodderE0 = getInputValue('owned_fodder_Epic0');
     const qfOwnedFodderE1 = getInputValue('owned_fodder_Epic1');
     const qfOwnedFodderE2 = getInputValue('owned_fodder_Epic2');
@@ -113,7 +72,6 @@ function calculate() {
     const qfOwnedFodderM3 = getInputValue('owned_fodder_Mythic3');
     const qfOwnedFodderM4 = getInputValue('owned_fodder_Mythic4');
 
-    // C. TARGET S-ITEM Quantities
     const qtTargetSitemE0 = getInputValue('target_sitem_Epic0');
     const qtTargetSitemE1 = getInputValue('target_sitem_Epic1');
     const qtTargetSitemE2 = getInputValue('target_sitem_Epic2');
@@ -127,12 +85,6 @@ function calculate() {
     const qtTargetSitemM3 = getInputValue('target_sitem_Mythic3');
     const qtTargetSitemM4 = getInputValue('target_sitem_Mythic4');
 
-
-    // =========================================================================
-    // BAGIAN 2: PERHITUNGAN TOTAL KEPEMILIKAN (OWNED) DALAM EPIC +0 UNIT
-    // =========================================================================
-
-    // Mengambil nilai konversi untuk S-Item dan Fodder dari CONVERSION_TABLE
     const [S_E0, F_E0] = CONVERSION_TABLE['Epic +0'];
     const [S_E1, F_E1] = CONVERSION_TABLE['Epic +1'];
     const [S_E2, F_E2] = CONVERSION_TABLE['Epic +2'];
@@ -146,9 +98,6 @@ function calculate() {
     const [S_M3, F_M3] = CONVERSION_TABLE['Mythic +3'];
     const [S_M4, F_M4] = CONVERSION_TABLE['Mythic +4'];
 
-    
-    // --- TOTAL S-ITEM (Dari Pemecahan Owned S-Item) ---
-    // Total S-Item (TS) = Qty Owned S-Item * S-Item Value Tier-nya
     const totalOwnedSItem = 
         (qsOwnedSitemE0 * S_E0) + (qsOwnedSitemE1 * S_E1) + (qsOwnedSitemE2 * S_E2) + 
         (qsOwnedSitemL0 * S_L0) + (qsOwnedSitemL1 * S_L1) + (qsOwnedSitemL2 * S_L2) + 
@@ -156,10 +105,6 @@ function calculate() {
         (qsOwnedSitemM0 * S_M0) + (qsOwnedSitemM1 * S_M1) + (qsOwnedSitemM2 * S_M2) + 
         (qsOwnedSitemM3 * S_M3) + (qsOwnedSitemM4 * S_M4);
 
-
-    // --- TOTAL FODDER (Dari Pemecahan Owned S-Item + Owned Fodder) ---
-    
-    // Fodder dari Pemecahan Owned S-Item: Qty Owned S-Item * Fodder Value Tier-nya
     const fodderFromSItem = 
         (qsOwnedSitemE0 * F_E0) + (qsOwnedSitemE1 * F_E1) + (qsOwnedSitemE2 * F_E2) + 
         (qsOwnedSitemL0 * F_L0) + (qsOwnedSitemL1 * F_L1) + (qsOwnedSitemL2 * F_L2) + 
@@ -167,9 +112,6 @@ function calculate() {
         (qsOwnedSitemM0 * F_M0) + (qsOwnedSitemM1 * F_M1) + (qsOwnedSitemM2 * F_M2) + 
         (qsOwnedSitemM3 * F_M3) + (qsOwnedSitemM4 * F_M4);
 
-    // Fodder dari Pemecahan Owned Fodder: Qty Owned Fodder * (S-Item Value + Fodder Value) Tier-nya
-    // Logika Fodder: 
-    // Rumus: Qty Fodder * (S_VAL + F_VAL) -> Ini yang kita pakai, icibos.
     const fodderFromFodder =
         (qfOwnedFodderE0 * (S_E0 + F_E0)) + (qfOwnedFodderE1 * (S_E1 + F_E1)) + (qfOwnedFodderE2 * (S_E2 + F_E2)) +
         (qfOwnedFodderL0 * (S_L0 + F_L0)) + (qfOwnedFodderL1 * (S_L1 + F_L1)) + (qfOwnedFodderL2 * (S_L2 + F_L2)) +
@@ -179,13 +121,6 @@ function calculate() {
 
     const totalOwnedFodder = fodderFromSItem + fodderFromFodder;
 
-
-    // =========================================================================
-    // BAGIAN 3: PERHITUNGAN TOTAL KEBUTUHAN (TARGET) DALAM EPIC +0 UNIT
-    // =========================================================================
-
-    // --- TOTAL TARGET S-ITEM ---
-    // Total Target S-Item (TS) = Qty Target S-Item * S-Item Value Tier-nya
     const totalTargetSItem = 
         (qtTargetSitemE0 * S_E0) + (qtTargetSitemE1 * S_E1) + (qtTargetSitemE2 * S_E2) + 
         (qtTargetSitemL0 * S_L0) + (qtTargetSitemL1 * S_L1) + (qtTargetSitemL2 * S_L2) + 
@@ -193,8 +128,6 @@ function calculate() {
         (qtTargetSitemM0 * S_M0) + (qtTargetSitemM1 * S_M1) + (qtTargetSitemM2 * S_M2) + 
         (qtTargetSitemM3 * S_M3) + (qtTargetSitemM4 * S_M4);
 
-    // --- TOTAL TARGET FODDER ---
-    // Total Target Fodder (TF) = Qty Target S-Item * Fodder Value Tier-nya
     const totalTargetFodder = 
         (qtTargetSitemE0 * F_E0) + (qtTargetSitemE1 * F_E1) + (qtTargetSitemE2 * F_E2) + 
         (qtTargetSitemL0 * F_L0) + (qtTargetSitemL1 * F_L1) + (qtTargetSitemL2 * F_L2) + 
@@ -202,63 +135,53 @@ function calculate() {
         (qtTargetSitemM0 * F_M0) + (qtTargetSitemM1 * F_M1) + (qtTargetSitemM2 * F_M2) + 
         (qtTargetSitemM3 * F_M3) + (qtTargetSitemM4 * F_M4);
 
+    const rawResultSItem = totalTargetSItem - totalOwnedSItem;
+    const rawResultFodder = totalTargetFodder - totalOwnedFodder;
 
-    // =========================================================================
-    // BAGIAN 4: HASIL (SELISIH)
-    // =========================================================================
-    
-    const resultSItem = totalTargetSItem - totalOwnedSItem;
-    const resultFodder = totalTargetFodder - totalOwnedFodder;
+    const sItemFlag = rawResultSItem > 0 ? 'less' : rawResultSItem < 0 ? 'more' : 'equal';
+    const fodderFlag = rawResultFodder > 0 ? 'less' : rawResultFodder < 0 ? 'more' : 'equal';
 
-
-    // =========================================================================
-    // BAGIAN 5: MENAMPILKAN DAN STYLING HASIL
-    // =========================================================================
+    const resultSItem = Math.abs(rawResultSItem);
+    const resultFodder = Math.abs(rawResultFodder);
 
     const rSItemElement = document.getElementById('r_sitem');
     const rFodderElement = document.getElementById('r_fodder');
 
-    // toLocaleString() untuk format angka yang enak dibaca (misalnya 10,000)
     rSItemElement.textContent = resultSItem.toLocaleString();
     rFodderElement.textContent = resultFodder.toLocaleString();
 
-    // Styling sesuai permintaan Red-Yellow-Green (kita pakai Red dan Green)
     const redFont = '#9C0006'; 
     const redFill = '#FFC7CE'; 
     const greenFont = '#006100'; 
     const greenFill = '#C6EFCE'; 
-    const neutralFill = '#f5f5f5'; // Default background
+    const neutralFill = '#f5f5f5'; 
 
-    // S-Item Result Styling
-    if (resultSItem > 0) { // Kekurangan (Butuh) -> Merah (Bad)
-        rSItemElement.style.color = redFont; 
+    if (sItemFlag === 'less') {
+        rSItemElement.style.color = redFont;
         rSItemElement.style.backgroundColor = redFill;
-    } else if (resultSItem < 0) { // Kelebihan -> Hijau (Good)
-        rSItemElement.style.color = greenFont; 
+    } else if (sItemFlag === 'more') {
+        rSItemElement.style.color = greenFont;
         rSItemElement.style.backgroundColor = greenFill;
-    } else { // Pas -> Default
-        rSItemElement.style.color = 'initial'; 
+    } else {
+        rSItemElement.style.color = 'initial';
         rSItemElement.style.backgroundColor = neutralFill;
     }
 
-    // Fodder Result Styling
-    if (resultFodder > 0) { // Kekurangan (Butuh) -> Merah (Bad)
+    if (fodderFlag === 'less') {
         rFodderElement.style.color = redFont;
         rFodderElement.style.backgroundColor = redFill;
-    } else if (resultFodder < 0) { // Kelebihan -> Hijau (Good)
+    } else if (fodderFlag === 'more') {
         rFodderElement.style.color = greenFont;
         rFodderElement.style.backgroundColor = greenFill;
-    } else { // Pas -> Default
+    } else {
         rFodderElement.style.color = 'initial';
         rFodderElement.style.backgroundColor = neutralFill;
     }
-    
+
     rSItemElement.style.fontWeight = 'bolder';
     rFodderElement.style.fontWeight = 'bolder';
 }
 
-
-// Jalankan setup saat dokumen selesai dimuat
 document.addEventListener('DOMContentLoaded', () => {
     setupInputListeners();
     calculate();
