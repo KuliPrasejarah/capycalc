@@ -1,49 +1,78 @@
-// ========================================
-// 📦 Material Conversion Table (to Epic +0)
-// ========================================
+// === CAPY WORKBENCH CALCULATOR === //
+// 😎 made with logic and love
 
-// Versi 1: Menggunakan kombinasi S-item dan Fodder
-const materialConversion = {
-  "Epic+0":      { sitem: 1,  fodder: 0 },
-  "Epic+1":      { sitem: 1,  fodder: 1 },
-  "Epic+2":      { sitem: 1,  fodder: 3 },
-  "Legendary+0": { sitem: 3,  fodder: 9 },
-  "Legendary+1": { sitem: 3,  fodder: 21 },
-  "Legendary+2": { sitem: 3,  fodder: 33 },
-  "Legendary+3": { sitem: 6,  fodder: 42 },
-  "Mythic+0":    { sitem: 18, fodder: 126 },
-  "Mythic+1":    { sitem: 36, fodder: 252 },
-  "Mythic+2":    { sitem: 54, fodder: 378 },
-  "Mythic+3":    { sitem: 72, fodder: 504 },
-  "Mythic+4":    { sitem: 90, fodder: 630 }
+// 🔹 Konversi tabel ke Epic+0
+const conversionTable = {
+  "Epic+0": { sitem: 1, fodder: 0 },
+  "Epic+1": { sitem: 1, fodder: 1 },
+  "Epic+2": { sitem: 1, fodder: 3 },
+  "Legendary+0": { sitem: 3, fodder: 9 },
+  "Legendary+1": { sitem: 3, fodder: 21 },
+  "Legendary+2": { sitem: 3, fodder: 33 },
+  "Legendary+3": { sitem: 6, fodder: 42 },
+  "Mythic+0": { sitem: 18, fodder: 126 },
+  "Mythic+1": { sitem: 36, fodder: 252 },
+  "Mythic+2": { sitem: 54, fodder: 378 },
+  "Mythic+3": { sitem: 72, fodder: 504 },
+  "Mythic+4": { sitem: 90, fodder: 630 }
 };
 
-// Versi 2: Semua dikonversi jadi setara Fodder total (jika ingin hitung bahan full)
-const fodderOnlyConversion = {
-  "Epic+0":      1,   // Base Epic
-  "Epic+1":      2,   // Epic+0 + 1 fodder
-  "Epic+2":      4,   // Epic+1 + 2 fodder
-  "Legendary+0": 12,  // 3 S-item * 4 Epic each
-  "Legendary+1": 30,  // 3 S-item + 21 fodder
-  "Legendary+2": 48,
-  "Legendary+3": 72,
-  "Mythic+0":    252,
-  "Mythic+1":    504,
-  "Mythic+2":    756,
-  "Mythic+3":    1008,
-  "Mythic+4":    1260
-};
+// 🔹 Tier list biar berurutan
+const tiers = [
+  "Epic+0", "Epic+1", "Epic+2",
+  "Legendary+0", "Legendary+1", "Legendary+2", "Legendary+3",
+  "Mythic+0", "Mythic+1", "Mythic+2", "Mythic+3", "Mythic+4"
+];
 
-// ========================================
-// 🔍 Helper Functions
-// ========================================
+// 🔹 Ambil total konversi ke Epic+0
+function calculateTotals(prefix) {
+  let totalSItem = 0;
+  let totalFodder = 0;
 
-// Dapatkan material berdasarkan tier
-function getMaterial(tier) {
-  return materialConversion[tier] || { sitem: 0, fodder: 0 };
+  tiers.forEach(tier => {
+    // ganti simbol untuk ID input (biar nyocok)
+    const idSafe = tier.toLowerCase().replace("+", "").replace(/\s/g, "_");
+
+    const sItemValue = Number(document.getElementById(`${prefix}_sitem_${idSafe}`)?.value || 0);
+    const fodderValue = Number(document.getElementById(`${prefix}_fod_${idSafe}`)?.value || 0);
+
+    totalSItem += sItemValue * conversionTable[tier].sitem;
+    totalFodder += fodderValue * conversionTable[tier].fodder;
+  });
+
+  return { sitem: totalSItem, fodder: totalFodder };
 }
 
-// Dapatkan total fodder (jika ingin konversi semua ke fodder)
-function getTotalFodder(tier) {
-  return fodderOnlyConversion[tier] || 0;
+// 🔹 Update result secara realtime
+function updateResult() {
+  const owned = calculateTotals("owned");
+  const target = calculateTotals("target");
+
+  const diffSItem = owned.sitem - target.sitem;
+  const diffFodder = owned.fodder - target.fodder;
+
+  const resultBox = document.getElementById("result");
+  if (!resultBox) return;
+
+  let sItemText = diffSItem >= 0
+    ? `S-Item: +${diffSItem.toLocaleString()} (Lebih 😎)`
+    : `S-Item: ${diffSItem.toLocaleString()} (Kurang 😭)`;
+
+  let fodderText = diffFodder >= 0
+    ? `Fodder: +${diffFodder.toLocaleString()} (Lebih 🤓)`
+    : `Fodder: ${diffFodder.toLocaleString()} (Kurang 😭)`;
+
+  resultBox.innerHTML = `
+    <h3>Result</h3>
+    <p>${sItemText}</p>
+    <p>${fodderText}</p>
+  `;
 }
+
+// 🔹 Listener untuk semua input biar auto update
+document.querySelectorAll("input").forEach(input => {
+  input.addEventListener("input", updateResult);
+});
+
+// Jalankan sekali di awal
+updateResult();
