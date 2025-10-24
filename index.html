@@ -5,18 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Capy Tier Calculator 🦦</title>
   <style>
-    /* --- Style dasar --- */
     body {
       font-family: Arial, sans-serif;
       background: #e6edf5;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh; /* biar konten rata tengah layar */
+      min-height: 100vh;
       margin: 0;
     }
 
-    /* --- Container utama --- */
     .calculator-box {
       background: #fff;
       padding: 30px;
@@ -31,132 +29,190 @@
       color: #333;
     }
 
-    /* --- Input field --- */
-    label {
-      display: block;
-      margin-top: 10px;
-      font-weight: bold;
-      color: #333;
+    /* Layout dua kolom (Fodder & Core) */
+    .input-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 20px;
       text-align: left;
     }
 
-    input, select {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
+    .column-title {
       text-align: center;
-    }
-
-    /* --- Tombol hitung --- */
-    button {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 10px;
-      background: #0084ff;
-      color: white;
-      font-size: 16px;
-      margin-top: 20px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #005fcc;
-    }
-
-    /* --- Hasil --- */
-    #result {
-      margin-top: 20px;
       font-weight: bold;
+      margin-bottom: 5px;
+      color: #005fcc;
+    }
+
+    label {
+      font-weight: bold;
+      font-size: 14px;
       color: #333;
     }
+
+    input {
+      width: 100%;
+      padding: 6px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 6px;
+      text-align: center;
+      box-sizing: border-box;
+    }
+
+    #result-box {
+      margin-top: 25px;
+      padding: 15px;
+      border-top: 2px solid #eee;
+      text-align: left;
+    }
+
+    #result-box h2 {
+      margin: 0 0 10px 0;
+      font-size: 18px;
+      color: #333;
+    }
+
+    .result-line {
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .good { color: #006100; }
+    .need { color: #9C0006; }
   </style>
 </head>
 <body>
-
   <div class="calculator-box">
     <h1>Capy Tier Calculator 🦦</h1>
 
-    <!-- Input Epic Fodder -->
-    <label for="fodder">Epic Fodder:</label>
-    <input type="number" id="fodder" placeholder="Masukkan jumlah Fodder">
+    <div class="input-grid">
+      <!-- Judul kolom -->
+      <div class="column-title">Fodder</div>
+      <div class="column-title">Core</div>
 
-    <!-- Input Epic Core -->
-    <label for="core">Epic Core:</label>
-    <input type="number" id="core" placeholder="Masukkan jumlah Core">
+      <!-- Epic +0 -->
+      <div>
+        <label for="fod_ep0">Epic +0:</label>
+        <input type="number" id="fod_ep0" placeholder="0">
+      </div>
+      <div>
+        <label for="core_ep0">Epic +0:</label>
+        <input type="number" id="core_ep0" placeholder="0">
+      </div>
 
-    <!-- Dropdown Target Tier -->
-    <label for="tier">Target Tier:</label>
-    <select id="tier">
-      <option value="Epic +0">Epic +0</option>
-      <option value="Epic +1">Epic +1</option>
-      <option value="Epic +2">Epic +2</option>
-      <option value="Legendary +0">Legendary +0</option>
-      <option value="Legendary +1">Legendary +1</option>
-      <option value="Legendary +2">Legendary +2</option>
-      <option value="Legendary +3">Legendary +3</option>
-      <option value="Mythic +0">Mythic +0</option>
-      <option value="Mythic +1">Mythic +1</option>
-      <option value="Mythic +2">Mythic +2</option>
-      <option value="Mythic +3">Mythic +3</option>
-      <option value="Mythic +4">Mythic +4</option>
-    </select>
+      <!-- Epic +1 -->
+      <div>
+        <label for="fod_ep1">Epic +1:</label>
+        <input type="number" id="fod_ep1" placeholder="0">
+      </div>
+      <div>
+        <label for="core_ep1">Epic +1:</label>
+        <input type="number" id="core_ep1" placeholder="0">
+      </div>
 
-    <!-- Tombol -->
-    <button onclick="updateResult()">Hitung Kekurangan</button>
+      <!-- Epic +2 -->
+      <div>
+        <label for="fod_ep2">Epic +2:</label>
+        <input type="number" id="fod_ep2" placeholder="0">
+      </div>
+      <div>
+        <label for="core_ep2">Epic +2:</label>
+        <input type="number" id="core_ep2" placeholder="0">
+      </div>
 
-    <!-- Hasil -->
-    <div id="result">Masukkan data di atas 👆</div>
+      <!-- Legend +0 -->
+      <div>
+        <label for="fod_lg0">Legend +0:</label>
+        <input type="number" id="fod_lg0" placeholder="0">
+      </div>
+      <div>
+        <label for="core_lg0">Legend +0:</label>
+        <input type="number" id="core_lg0" placeholder="0">
+      </div>
+
+      <!-- Legend +1 -->
+      <div>
+        <label for="fod_lg1">Legend +1:</label>
+        <input type="number" id="fod_lg1" placeholder="0">
+      </div>
+      <div>
+        <label for="core_lg1">Legend +1:</label>
+        <input type="number" id="core_lg1" placeholder="0">
+      </div>
+
+      <!-- Legend +2 -->
+      <div>
+        <label for="fod_lg2">Legend +2:</label>
+        <input type="number" id="fod_lg2" placeholder="0">
+      </div>
+      <div>
+        <label for="core_lg2">Legend +2:</label>
+        <input type="number" id="core_lg2" placeholder="0">
+      </div>
+
+      <!-- Legend +3 -->
+      <div>
+        <label for="fod_lg3">Legend +3:</label>
+        <input type="number" id="fod_lg3" placeholder="0">
+      </div>
+      <div>
+        <label for="core_lg3">Legend +3:</label>
+        <input type="number" id="core_lg3" placeholder="0">
+      </div>
+    </div>
+
+    <div id="result-box">
+      <h2>Kekurangan:</h2>
+      <div class="result-line" id="resFodder">Fodder Epic: -</div>
+      <div class="result-line" id="resCore">Core Epic: -</div>
+    </div>
   </div>
 
   <script>
-    // --- LOGIKA HITUNGAN ---
-    // Kamu bisa ubah data kebutuhan di sini (contoh: tiap tier butuh jumlah tertentu)
-    const tierRequirements = {
-      "Epic +0": { fodder: 0, core: 0 },
-      "Epic +1": { fodder: 2, core: 1 },
-      "Epic +2": { fodder: 4, core: 2 },
-      "Legendary +0": { fodder: 6, core: 3 },
-      "Legendary +1": { fodder: 8, core: 4 },
-      "Legendary +2": { fodder: 10, core: 5 },
-      "Legendary +3": { fodder: 12, core: 6 },
-      "Mythic +0": { fodder: 14, core: 7 },
-      "Mythic +1": { fodder: 16, core: 8 },
-      "Mythic +2": { fodder: 18, core: 9 },
-      "Mythic +3": { fodder: 20, core: 10 },
-      "Mythic +4": { fodder: 25, core: 12 },
+    // --- Logika dasar (contoh: kebutuhan target total untuk Epic tier) ---
+    // Kamu bisa ubah nanti sesuai sistemmu
+    const targetNeed = {
+      fodderEpic: 10,
+      coreEpic: 6
     };
 
+    // Ambil semua input yang relevan
+    const fodInputs = document.querySelectorAll('input[id^="fod_"]');
+    const coreInputs = document.querySelectorAll('input[id^="core_"]');
+
     function updateResult() {
-      const fodder = parseInt(document.getElementById("fodder").value) || 0;
-      const core = parseInt(document.getElementById("core").value) || 0;
-      const tier = document.getElementById("tier").value;
+      // Hitung total semua fodder dan core
+      let totalFod = 0;
+      let totalCore = 0;
 
-      const req = tierRequirements[tier];
-      const needFodder = req.fodder - fodder;
-      const needCore = req.core - core;
+      fodInputs.forEach(i => totalFod += parseInt(i.value) || 0);
+      coreInputs.forEach(i => totalCore += parseInt(i.value) || 0);
 
-      let text = "";
+      // Hitung kekurangan
+      const needFod = targetNeed.fodderEpic - totalFod;
+      const needCore = targetNeed.coreEpic - totalCore;
 
-      if (needFodder <= 0 && needCore <= 0) {
-        text = "Kamu sudah cukup untuk mencapai tier ini! 😎";
+      const resFod = document.getElementById('resFodder');
+      const resCore = document.getElementById('resCore');
+
+      // Update tampilan hasil
+      if (needFod <= 0) {
+        resFod.innerHTML = `Fodder Epic: <span class="good">Cukup (${totalFod})</span>`;
       } else {
-        text = `Kamu kekurangan `;
-        if (needFodder > 0) text += `${needFodder} Fodder `;
-        if (needCore > 0) text += `${needCore} Core `;
-        text += "🔥";
+        resFod.innerHTML = `Fodder Epic: <span class="need">Kurang ${needFod}</span>`;
       }
 
-      document.getElementById("result").innerText = text;
+      if (needCore <= 0) {
+        resCore.innerHTML = `Core Epic: <span class="good">Cukup (${totalCore})</span>`;
+      } else {
+        resCore.innerHTML = `Core Epic: <span class="need">Kurang ${needCore}</span>`;
+      }
     }
 
-    // --- Update otomatis saat input berubah ---
-    document.getElementById("fodder").addEventListener("input", updateResult);
-    document.getElementById("core").addEventListener("input", updateResult);
-    document.getElementById("tier").addEventListener("change", updateResult);
+    // Update otomatis kalau input berubah
+    fodInputs.forEach(i => i.addEventListener('input', updateResult));
+    coreInputs.forEach(i => i.addEventListener('input', updateResult));
   </script>
 </body>
 </html>
