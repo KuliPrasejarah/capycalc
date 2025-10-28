@@ -112,7 +112,7 @@ input {
 
 footer {
   position: fixed;      /* nempel di viewport */
-  bottom: 0;            /* bawah layar */
+  bottom: 10px;            /* bawah layar */
   left: 50%;
   transform: translateX(-50%); /* supaya center horizontal */
   font-size: 14px;
@@ -198,7 +198,7 @@ footer {
     font-size: 11px;
     padding: 4px 8px;
     position: fixed;
-    bottom: 0;
+    bottom: 10px;            /* bawah layar */
     left: 50%;
     transform: translateX(-50%);
   }
