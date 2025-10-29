@@ -113,8 +113,6 @@ input {
 footer {
   position: fixed;      /* nempel di viewport */
   bottom: 10px;            /* bawah layar */
-  left: 50%;
-  transform: translateX(-50%); /* supaya center horizontal */
   font-size: 14px;
   color: #0084ff;
   text-align: center;
