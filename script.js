@@ -7,10 +7,10 @@ const CONVERSION_TABLE = {
     'Legend +2': [3, 33],
     'Legend +3': [6, 42],
     'Mythic +0': [18, 126],
-    'Mythic +1': [36, 252],
-    'Mythic +2': [54, 378],
-    'Mythic +3': [72, 504],
-    'Mythic +4': [90, 630]
+    'Mythic +1': [18, 270],
+    'Mythic +2': [18, 414],
+    'Mythic +3': [18, 558],
+    'Mythic +4': [18, 702]
 };
 
 function getInputValue(id) {
