@@ -189,9 +189,6 @@ h1 {
 
 .section {
   margin-bottom: 20px;
-
-  flex: 1;
-  min-width: 350px;
 }
 
 .section-title {
