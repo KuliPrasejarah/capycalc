@@ -28,7 +28,6 @@ body {
 }
 
 .header h1 {
-  background-color: transparent; /* bikin background transparan */
   color: inherit; /* kalau mau ikut warna container, atau bisa pake rgba(0,0,0,0) */
   box-shadow: none;
   padding: 0;
