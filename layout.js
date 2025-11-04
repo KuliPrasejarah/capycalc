@@ -1,6 +1,14 @@
 fetch('header.html')
   .then(res => res.text())
-  .then(data => document.getElementById('header').innerHTML = data)
+  .then(data => {
+      document.getElementById('header').innerHTML = data;
+
+      // update judul otomatis
+      const siteTitle = document.querySelector('.site-title-alt');
+      if (siteTitle) {
+          siteTitle.textContent = document.title; // ambil dari <title> <head>
+      }
+  })
   .catch(() => console.error('Header failed to load'));
 
 fetch('footer.html')
