@@ -14,15 +14,32 @@ body {
   color: #000;
 }
 
-/* === Header === */
+/* === Header (Fixed & Clean Version) === */
 .header {
-  align-items: center;
-  background-color: rgba(255, 255, 255, 0.85);
   display: flex;
+  align-items: center;
   justify-content: space-between;
+  background-color: rgba(255, 255, 255, 0.85);
   padding: 8px 16px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(4px);
+  flex-wrap: wrap; /* biar gak tumpuk pas layar kecil */
+  gap: 10px;
+}
+
+.header h1 {
+  background: none;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+  width: auto;
+  color: #000000;
+  font-size: 1.3rem;
+  text-align: center;
+  line-height: 1.4;
+  flex: 1;
+  font-family: monospace, 'Courier New', Courier;
 }
 
 .home-link {
@@ -34,6 +51,7 @@ body {
   text-decoration: none;
   width: 80px;
   transition: 0.3s;
+  flex-shrink: 0; /* biar gak gepeng pas layar kecil */
 }
 
 .home-link:hover {
@@ -55,7 +73,22 @@ body {
   color: #000000;
 }
 
+/* === Responsif Header === */
 @media screen and (max-width: 600px) {
+  .header {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .header h1 {
+    font-size: 1.1rem;
+  }
+
+  .home-link {
+    width: 100%;
+    max-width: 200px;
+  }
+
   .site-title {
     display: none;
   }
