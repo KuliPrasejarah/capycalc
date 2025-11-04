@@ -14,6 +14,116 @@ body {
   color: #000;
 }
 
+/* === Header === */
+.header {
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.85);
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 16px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  backdrop-filter: blur(4px);
+}
+
+.home-link {
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 4px;
+  color: #ffffff;
+  padding: 8px;
+  text-align: center;
+  text-decoration: none;
+  width: 80px;
+  transition: 0.3s;
+}
+
+.home-link:hover {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.site-title, 
+.site-title-alt {
+  font-size: large;
+  margin: 0;
+  color: #000000;
+}
+
+.site-title-alt {
+  display: none;
+  line-height: 1.5;
+  margin-bottom: 32px;
+  text-align: center;
+  color: #000000;
+}
+
+@media screen and (max-width: 600px) {
+  .site-title {
+    display: none;
+  }
+
+  .site-title-alt {
+    display: block;
+  }
+}
+
+/* === Menu Container === */
+.menu-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.menu-box {
+  background-color: rgba(255, 255, 255, 0.85);
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+  justify-items: center;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  max-width: 90vw;
+  backdrop-filter: blur(6px);
+}
+
+.menu-button {
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 2px solid #808080;
+  border-radius: 8px;
+  width: 150px;
+  height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.2s;
+  padding: 10px;
+}
+
+.menu-button:hover {
+  background-color: rgba(240, 240, 240, 0.9);
+  transform: scale(1.05);
+}
+
+.menu-button img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+.menu-button span {
+  font-weight: bold;
+  color: #000000;
+}
+
+/* === Kalkulator Page === */
 h1 {
   text-align: center;
   color: #000;
