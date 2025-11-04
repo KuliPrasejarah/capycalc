@@ -23,21 +23,22 @@ function getInputValue(id) {
 
 function setupInputListeners() {
     const TIERS = Object.keys(CONVERSION_TABLE);
-    const ownedSitemInputs = document.querySelectorAll('.section:nth-child(1) .columns .column:nth-child(1) input');
+
+    const ownedSitemInputs = document.querySelectorAll('.section .columns .column:first-child input');
     TIERS.forEach((tier, index) => {
         const tierId = tier.replace(/\s/g, '').replace('+', '');
         ownedSitemInputs[index].id = `owned_sitem_${tierId}`;
         ownedSitemInputs[index].addEventListener('input', calculate);
     });
 
-    const ownedFodderInputs = document.querySelectorAll('.section:nth-child(1) .columns .column:nth-child(2) input');
+    const ownedFodderInputs = document.querySelectorAll('.section .columns .column:last-child input');
     TIERS.forEach((tier, index) => {
         const tierId = tier.replace(/\s/g, '').replace('+', '');
         ownedFodderInputs[index].id = `owned_fodder_${tierId}`;
         ownedFodderInputs[index].addEventListener('input', calculate);
     });
 
-    const targetSitemInputs = document.querySelectorAll('.section:nth-child(2) .columns .column:nth-child(1) input');
+    const targetSitemInputs = document.querySelectorAll('.section:nth-of-type(2) .columns .column input');
     TIERS.forEach((tier, index) => {
         const tierId = tier.replace(/\s/g, '').replace('+', '');
         targetSitemInputs[index].id = `target_sitem_${tierId}`;
