@@ -3,8 +3,8 @@ fetch('header.html')
   .then(data => {
       document.getElementById('header').innerHTML = data;
 
-      // update judul otomatis
-      const siteTitle = document.querySelector('.site-title-alt');
+      // update judul otomatis tanpa class
+      const siteTitle = document.querySelector('#header h1');
       if (siteTitle) {
           siteTitle.textContent = document.title; // ambil dari <title> <head>
       }
