@@ -145,7 +145,9 @@ function calculate() {
     const resultFodder = Math.abs(rawResultFodder);
 
     const rSItemElement = document.getElementById('r_sitem');
+    const rSSItemElement = document.getElementById('r_ssitem');
     const rFodderElement = document.getElementById('r_fodder');
+    const rFFodderElement = document.getElementById('r_ffodder');
 
     rSItemElement.textContent = resultSItem.toLocaleString();
     rFodderElement.textContent = resultFodder.toLocaleString();
@@ -159,23 +161,29 @@ function calculate() {
     if (sItemFlag === 'less') {
         rSItemElement.style.color = redFont;
         rSItemElement.style.backgroundColor = redFill;
+        rSSItemElement.style.backgroundColor = redFill;
     } else if (sItemFlag === 'more') {
         rSItemElement.style.color = greenFont;
         rSItemElement.style.backgroundColor = greenFill;
+        rSSItemElement.style.backgroundColor = greenFill;
     } else {
         rSItemElement.style.color = 'initial';
         rSItemElement.style.backgroundColor = neutralFill;
+        rSSItemElement.style.backgroundColor = neutralFill;
     }
 
     if (fodderFlag === 'less') {
         rFodderElement.style.color = redFont;
         rFodderElement.style.backgroundColor = redFill;
+        rFFodderElement.style.backgroundColor = redFill;
     } else if (fodderFlag === 'more') {
         rFodderElement.style.color = greenFont;
         rFodderElement.style.backgroundColor = greenFill;
+        rFFodderElement.style.backgroundColor = greenFill;
     } else {
         rFodderElement.style.color = 'initial';
         rFodderElement.style.backgroundColor = neutralFill;
+        rFFodderElement.style.backgroundColor = neutralFill;
     }
 
     rSItemElement.style.fontWeight = 'bolder';
