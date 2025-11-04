@@ -155,7 +155,7 @@ function calculate() {
     const redFill = '#FFC7CE'; 
     const greenFont = '#006100'; 
     const greenFill = '#C6EFCE'; 
-    const neutralFill = '#ffffff'; 
+    const neutralFill = '#f5f5f5'; 
 
     if (sItemFlag === 'less') {
         rSItemElement.style.color = redFont;
