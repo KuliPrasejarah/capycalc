@@ -132,21 +132,18 @@ function setupCreditsModal() {
     const modal = document.getElementById("credits-modal");
     const btn = document.querySelector('.home-link[href="#"]');
     const closeBtn = document.querySelector(".close-btn");
-
-    if (!modal || !btn || !closeBtn) return;
-
+    
     btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        modal.style.display = "flex";
+      e.preventDefault();
+      modal.style.display = "flex";
     });
-
+    
     closeBtn.addEventListener("click", () => {
-        modal.style.display = "none";
+      modal.style.display = "none";
     });
-
+    
     window.addEventListener("click", (e) => {
-        if (e.target === modal) modal.style.display = "none";
-    });
+      if (e.target === modal) modal.style.display = "none";
 }
 
 // === INIT SEMUANYA ===
