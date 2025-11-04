@@ -151,6 +151,9 @@ function calculate() {
     const rSItemElement = document.getElementById('r_sitem');
     const rFodderElement = document.getElementById('r_fodder');
 
+    const rSBoxElement = document.getElementById('r_sbox');
+    const rFBoxElement = document.getElementById('r_fbox');
+
     rSItemElement.textContent = resultSItem.toLocaleString();
     rFodderElement.textContent = resultFodder.toLocaleString();
 
@@ -163,23 +166,29 @@ function calculate() {
     if (sItemFlag === 'less') {
         rSItemElement.style.color = redFont;
         rSItemElement.style.backgroundColor = redFill;
+        rSBoxElement.style.backgroundColor = redFill;
     } else if (sItemFlag === 'more') {
         rSItemElement.style.color = greenFont;
         rSItemElement.style.backgroundColor = greenFill;
+        rSBoxElement.style.backgroundColor = greenFill;
     } else {
         rSItemElement.style.color = 'initial';
         rSItemElement.style.backgroundColor = neutralFill;
+        rSBoxElement.style.backgroundColor = neutralFill;
     }
 
     if (fodderFlag === 'less') {
         rFodderElement.style.color = redFont;
         rFodderElement.style.backgroundColor = redFill;
+        rFBoxElement.style.backgroundColor = redFill;
     } else if (fodderFlag === 'more') {
         rFodderElement.style.color = greenFont;
         rFodderElement.style.backgroundColor = greenFill;
+        rFBoxElement.style.backgroundColor = greenFill;
     } else {
         rFodderElement.style.color = 'initial';
         rFodderElement.style.backgroundColor = neutralFill;
+        rFBoxElement.style.backgroundColor = neutralFill;
     }
 
     rSItemElement.style.fontWeight = 'bolder';
