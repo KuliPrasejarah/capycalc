@@ -198,24 +198,12 @@ h1 {
   font-size: 1.2em;
 }
 
-.section-divider {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 80px;
-}
-
-.section-divider::before {
-  content: "";
-  flex: 1;
-  border-top: 2px dashed #333;
-}
-
-.section-divider::after {
-  content: "⮞";
-  font-size: 1.5em;
-  color: #333;
-  margin-left: 6px;
+.section-arrow {
+  font-size: 3rem;       /* ukuran panah besar */
+  font-weight: bold;
+  color: #333;           /* warna panah */
+  align-self: center;    /* biar verticalnya di tengah */
+  margin: 0 20px;        /* jarak ke section kiri & kanan */
 }
 
 /* === Columns === */
