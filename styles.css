@@ -179,10 +179,19 @@ h1 {
   width: fit-content;
   max-width: 90vw;
   backdrop-filter: blur(6px);
+
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+
 }
 
 .section {
   margin-bottom: 20px;
+
+  flex: 1;
+  min-width: 350px;
 }
 
 .section-title {
