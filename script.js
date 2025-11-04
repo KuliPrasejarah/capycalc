@@ -23,21 +23,25 @@ function getInputValue(id) {
 
 function setupInputListeners() {
     const TIERS = Object.keys(CONVERSION_TABLE);
-    const ownedSitemInputs = document.querySelectorAll('.section:nth-child(1) .columns .column:nth-child(1) input');
+
+    // Owned S-Item
+    const ownedSitemInputs = document.querySelectorAll('.owned-items .columns .column:first-of-type input');
     TIERS.forEach((tier, index) => {
         const tierId = tier.replace(/\s/g, '').replace('+', '');
         ownedSitemInputs[index].id = `owned_sitem_${tierId}`;
         ownedSitemInputs[index].addEventListener('input', calculate);
     });
 
-    const ownedFodderInputs = document.querySelectorAll('.section:nth-child(1) .columns .column:nth-child(2) input');
+    // Owned Fodder
+    const ownedFodderInputs = document.querySelectorAll('.owned-items .columns .column:last-of-type input');
     TIERS.forEach((tier, index) => {
         const tierId = tier.replace(/\s/g, '').replace('+', '');
         ownedFodderInputs[index].id = `owned_fodder_${tierId}`;
         ownedFodderInputs[index].addEventListener('input', calculate);
     });
 
-    const targetSitemInputs = document.querySelectorAll('.section:nth-child(2) .columns .column:nth-child(1) input');
+    // Target S-Item
+    const targetSitemInputs = document.querySelectorAll('.target-items input');
     TIERS.forEach((tier, index) => {
         const tierId = tier.replace(/\s/g, '').replace('+', '');
         targetSitemInputs[index].id = `target_sitem_${tierId}`;
