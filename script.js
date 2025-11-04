@@ -1,3 +1,4 @@
+// === KONVERSI TABEL ===
 const CONVERSION_TABLE = {
     'Epic +0': [1, 0],
     'Epic +1': [1, 1],
@@ -13,6 +14,7 @@ const CONVERSION_TABLE = {
     'Mythic +4': [18, 702]
 };
 
+// === AMBIL INPUT VALUE ===
 function getInputValue(id) {
     const element = document.getElementById(id);
     if (element) {
@@ -21,8 +23,10 @@ function getInputValue(id) {
     return 0;
 }
 
+// === SETUP INPUT LISTENER ===
 function setupInputListeners() {
     const TIERS = Object.keys(CONVERSION_TABLE);
+
     const ownedSitemInputs = document.querySelectorAll('.section:nth-child(1) .columns .column:nth-child(1) input');
     TIERS.forEach((tier, index) => {
         const tierId = tier.replace(/\s/g, '').replace('+', '');
@@ -45,95 +49,38 @@ function setupInputListeners() {
     });
 }
 
+// === KALKULASI UTAMA ===
 function calculate() {
-    const qsOwnedSitemE0 = getInputValue('owned_sitem_Epic0');
-    const qsOwnedSitemE1 = getInputValue('owned_sitem_Epic1');
-    const qsOwnedSitemE2 = getInputValue('owned_sitem_Epic2');
-    const qsOwnedSitemL0 = getInputValue('owned_sitem_Legend0');
-    const qsOwnedSitemL1 = getInputValue('owned_sitem_Legend1');
-    const qsOwnedSitemL2 = getInputValue('owned_sitem_Legend2');
-    const qsOwnedSitemL3 = getInputValue('owned_sitem_Legend3');
-    const qsOwnedSitemM0 = getInputValue('owned_sitem_Mythic0');
-    const qsOwnedSitemM1 = getInputValue('owned_sitem_Mythic1');
-    const qsOwnedSitemM2 = getInputValue('owned_sitem_Mythic2');
-    const qsOwnedSitemM3 = getInputValue('owned_sitem_Mythic3');
-    const qsOwnedSitemM4 = getInputValue('owned_sitem_Mythic4');
+    const ids = [
+        'Epic0','Epic1','Epic2','Legend0','Legend1','Legend2','Legend3',
+        'Mythic0','Mythic1','Mythic2','Mythic3','Mythic4'
+    ];
+    const tiers = ['Epic +0','Epic +1','Epic +2','Legend +0','Legend +1','Legend +2','Legend +3',
+                   'Mythic +0','Mythic +1','Mythic +2','Mythic +3','Mythic +4'];
 
-    const qfOwnedFodderE0 = getInputValue('owned_fodder_Epic0');
-    const qfOwnedFodderE1 = getInputValue('owned_fodder_Epic1');
-    const qfOwnedFodderE2 = getInputValue('owned_fodder_Epic2');
-    const qfOwnedFodderL0 = getInputValue('owned_fodder_Legend0');
-    const qfOwnedFodderL1 = getInputValue('owned_fodder_Legend1');
-    const qfOwnedFodderL2 = getInputValue('owned_fodder_Legend2');
-    const qfOwnedFodderL3 = getInputValue('owned_fodder_Legend3');
-    const qfOwnedFodderM0 = getInputValue('owned_fodder_Mythic0');
-    const qfOwnedFodderM1 = getInputValue('owned_fodder_Mythic1');
-    const qfOwnedFodderM2 = getInputValue('owned_fodder_Mythic2');
-    const qfOwnedFodderM3 = getInputValue('owned_fodder_Mythic3');
-    const qfOwnedFodderM4 = getInputValue('owned_fodder_Mythic4');
+    // total semua
+    let totalOwnedSItem = 0;
+    let fodderFromSItem = 0;
+    let fodderFromFodder = 0;
+    let totalTargetSItem = 0;
+    let totalTargetFodder = 0;
 
-    const qtTargetSitemE0 = getInputValue('target_sitem_Epic0');
-    const qtTargetSitemE1 = getInputValue('target_sitem_Epic1');
-    const qtTargetSitemE2 = getInputValue('target_sitem_Epic2');
-    const qtTargetSitemL0 = getInputValue('target_sitem_Legend0');
-    const qtTargetSitemL1 = getInputValue('target_sitem_Legend1');
-    const qtTargetSitemL2 = getInputValue('target_sitem_Legend2');
-    const qtTargetSitemL3 = getInputValue('target_sitem_Legend3');
-    const qtTargetSitemM0 = getInputValue('target_sitem_Mythic0');
-    const qtTargetSitemM1 = getInputValue('target_sitem_Mythic1');
-    const qtTargetSitemM2 = getInputValue('target_sitem_Mythic2');
-    const qtTargetSitemM3 = getInputValue('target_sitem_Mythic3');
-    const qtTargetSitemM4 = getInputValue('target_sitem_Mythic4');
+    ids.forEach((id, i) => {
+        const tier = tiers[i];
+        const [S, F] = CONVERSION_TABLE[tier];
 
-    const [S_E0, F_E0] = CONVERSION_TABLE['Epic +0'];
-    const [S_E1, F_E1] = CONVERSION_TABLE['Epic +1'];
-    const [S_E2, F_E2] = CONVERSION_TABLE['Epic +2'];
-    const [S_L0, F_L0] = CONVERSION_TABLE['Legend +0'];
-    const [S_L1, F_L1] = CONVERSION_TABLE['Legend +1'];
-    const [S_L2, F_L2] = CONVERSION_TABLE['Legend +2'];
-    const [S_L3, F_L3] = CONVERSION_TABLE['Legend +3'];
-    const [S_M0, F_M0] = CONVERSION_TABLE['Mythic +0'];
-    const [S_M1, F_M1] = CONVERSION_TABLE['Mythic +1'];
-    const [S_M2, F_M2] = CONVERSION_TABLE['Mythic +2'];
-    const [S_M3, F_M3] = CONVERSION_TABLE['Mythic +3'];
-    const [S_M4, F_M4] = CONVERSION_TABLE['Mythic +4'];
+        const qsSitem = getInputValue(`owned_sitem_${id}`);
+        const qfFodder = getInputValue(`owned_fodder_${id}`);
+        const qtTarget = getInputValue(`target_sitem_${id}`);
 
-    const totalOwnedSItem = 
-        (qsOwnedSitemE0 * S_E0) + (qsOwnedSitemE1 * S_E1) + (qsOwnedSitemE2 * S_E2) + 
-        (qsOwnedSitemL0 * S_L0) + (qsOwnedSitemL1 * S_L1) + (qsOwnedSitemL2 * S_L2) + 
-        (qsOwnedSitemL3 * S_L3) +
-        (qsOwnedSitemM0 * S_M0) + (qsOwnedSitemM1 * S_M1) + (qsOwnedSitemM2 * S_M2) + 
-        (qsOwnedSitemM3 * S_M3) + (qsOwnedSitemM4 * S_M4);
-
-    const fodderFromSItem = 
-        (qsOwnedSitemE0 * F_E0) + (qsOwnedSitemE1 * F_E1) + (qsOwnedSitemE2 * F_E2) + 
-        (qsOwnedSitemL0 * F_L0) + (qsOwnedSitemL1 * F_L1) + (qsOwnedSitemL2 * F_L2) + 
-        (qsOwnedSitemL3 * F_L3) +
-        (qsOwnedSitemM0 * F_M0) + (qsOwnedSitemM1 * F_M1) + (qsOwnedSitemM2 * F_M2) + 
-        (qsOwnedSitemM3 * F_M3) + (qsOwnedSitemM4 * F_M4);
-
-    const fodderFromFodder =
-        (qfOwnedFodderE0 * (S_E0 + F_E0)) + (qfOwnedFodderE1 * (S_E1 + F_E1)) + (qfOwnedFodderE2 * (S_E2 + F_E2)) +
-        (qfOwnedFodderL0 * (S_L0 + F_L0)) + (qfOwnedFodderL1 * (S_L1 + F_L1)) + (qfOwnedFodderL2 * (S_L2 + F_L2)) +
-        (qfOwnedFodderL3 * (S_L3 + F_L3)) +
-        (qfOwnedFodderM0 * (S_M0 + F_M0)) + (qfOwnedFodderM1 * (S_M1 + F_M1)) + (qfOwnedFodderM2 * (S_M2 + F_M2)) +
-        (qfOwnedFodderM3 * (S_M3 + F_M3)) + (qfOwnedFodderM4 * (S_M4 + F_M4));
+        totalOwnedSItem += qsSitem * S;
+        fodderFromSItem += qsSitem * F;
+        fodderFromFodder += qfFodder * (S + F);
+        totalTargetSItem += qtTarget * S;
+        totalTargetFodder += qtTarget * F;
+    });
 
     const totalOwnedFodder = fodderFromSItem + fodderFromFodder;
-
-    const totalTargetSItem = 
-        (qtTargetSitemE0 * S_E0) + (qtTargetSitemE1 * S_E1) + (qtTargetSitemE2 * S_E2) + 
-        (qtTargetSitemL0 * S_L0) + (qtTargetSitemL1 * S_L1) + (qtTargetSitemL2 * S_L2) + 
-        (qtTargetSitemL3 * S_L3) +
-        (qtTargetSitemM0 * S_M0) + (qtTargetSitemM1 * S_M1) + (qtTargetSitemM2 * S_M2) + 
-        (qtTargetSitemM3 * S_M3) + (qtTargetSitemM4 * S_M4);
-
-    const totalTargetFodder = 
-        (qtTargetSitemE0 * F_E0) + (qtTargetSitemE1 * F_E1) + (qtTargetSitemE2 * F_E2) + 
-        (qtTargetSitemL0 * F_L0) + (qtTargetSitemL1 * F_L1) + (qtTargetSitemL2 * F_L2) + 
-        (qtTargetSitemL3 * F_L3) +
-        (qtTargetSitemM0 * F_M0) + (qtTargetSitemM1 * F_M1) + (qtTargetSitemM2 * F_M2) + 
-        (qtTargetSitemM3 * F_M3) + (qtTargetSitemM4 * F_M4);
 
     const rawResultSItem = totalTargetSItem - totalOwnedSItem;
     const rawResultFodder = totalTargetFodder - totalOwnedFodder;
@@ -150,11 +97,9 @@ function calculate() {
     rSItemElement.textContent = resultSItem.toLocaleString();
     rFodderElement.textContent = resultFodder.toLocaleString();
 
-    const redFont = '#9C0006'; 
-    const redFill = '#FFC7CE'; 
-    const greenFont = '#006100'; 
-    const greenFill = '#C6EFCE'; 
-    const neutralFill = '#f5f5f5'; 
+    const redFont = '#9C0006', redFill = '#FFC7CE';
+    const greenFont = '#006100', greenFill = '#C6EFCE';
+    const neutralFill = '#f5f5f5';
 
     if (sItemFlag === 'less') {
         rSItemElement.style.color = redFont;
@@ -182,7 +127,31 @@ function calculate() {
     rFodderElement.style.fontWeight = 'bolder';
 }
 
+// === CREDITS MODAL ===
+function setupCreditsModal() {
+    const modal = document.getElementById("credits-modal");
+    const btn = document.querySelector('.home-link[href="#"]');
+    const closeBtn = document.querySelector(".close-btn");
+
+    if (!modal || !btn || !closeBtn) return;
+
+    btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        modal.style.display = "flex";
+    });
+
+    closeBtn.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
+
+    window.addEventListener("click", (e) => {
+        if (e.target === modal) modal.style.display = "none";
+    });
+}
+
+// === INIT SEMUANYA ===
 document.addEventListener('DOMContentLoaded', () => {
     setupInputListeners();
     calculate();
+    setupCreditsModal();
 });
