@@ -15,3 +15,8 @@ fetch('footer.html')
   .then(res => res.text())
   .then(data => document.getElementById('footer').innerHTML = data)
   .catch(() => console.error('Footer failed to load'));
+
+fetch('credits.html')
+  .then(res => res.text())
+  .then(data => document.getElementById('credits').innerHTML = data)
+  .catch(() => console.error('Credits failed to load'));
