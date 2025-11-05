@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capybara Go! Workbench Calculator</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="capycalc.ico" type="image/x-icon">
+  <script src="script.js" defer></script>
+</head>
+
+<body>
+  <div id="header"></div>
+
+  <div class="container">
+    <div class="section owned-items">
+      <div class="section-title">Owned Items</div>
+      <div class="columns">
+        <div class="column">
+          <h3>S-Item</h3>
+          <div class="row"><label>Epic +0:</label><input type="number"></div>
+          <div class="row"><label>Epic +1:</label><input type="number"></div>
+          <div class="row"><label>Epic +2:</label><input type="number"></div>
+          <div class="row"><label>Legend +0:</label><input type="number"></div>
+          <div class="row"><label>Legend +1:</label><input type="number"></div>
+          <div class="row"><label>Legend +2:</label><input type="number"></div>
+          <div class="row"><label>Legend +3:</label><input type="number"></div>
+          <div class="row"><label>Mythic +0:</label><input type="number"></div>
+          <div class="row"><label>Mythic +1:</label><input type="number"></div>
+          <div class="row"><label>Mythic +2:</label><input type="number"></div>
+          <div class="row"><label>Mythic +3:</label><input type="number"></div>
+          <div class="row"><label>Mythic +4:</label><input type="number"></div>
+        </div>
+        <div class="column">
+          <h3>Fodder</h3>
+          <div class="row"><label>Epic +0:</label><input type="number"></div>
+          <div class="row"><label>Epic +1:</label><input type="number"></div>
+          <div class="row"><label>Epic +2:</label><input type="number"></div>
+          <div class="row"><label>Legend +0:</label><input type="number"></div>
+          <div class="row"><label>Legend +1:</label><input type="number"></div>
+          <div class="row"><label>Legend +2:</label><input type="number"></div>
+          <div class="row"><label>Legend +3:</label><input type="number"></div>
+          <div class="row"><label>Mythic +0:</label><input type="number"></div>
+          <div class="row"><label>Mythic +1:</label><input type="number"></div>
+          <div class="row"><label>Mythic +2:</label><input type="number"></div>
+          <div class="row"><label>Mythic +3:</label><input type="number"></div>
+          <div class="row"><label>Mythic +4:</label><input type="number"></div>
+        </div>
+      </div>
+    </div>
+    <div class="section-arrow">></div>
+    <div class="section target-items">
+      <div class="section-title">Target Item</div>
+      <div class="columns">
+        <div class="column">
+          <h3>S-Item</h3>
+          <div class="row"><label>Epic +0:</label><input type="number"></div>
+          <div class="row"><label>Epic +1:</label><input type="number"></div>
+          <div class="row"><label>Epic +2:</label><input type="number"></div>
+          <div class="row"><label>Legend +0:</label><input type="number"></div>
+          <div class="row"><label>Legend +1:</label><input type="number"></div>
+          <div class="row"><label>Legend +2:</label><input type="number"></div>
+          <div class="row"><label>Legend +3:</label><input type="number"></div>
+          <div class="row"><label>Mythic +0:</label><input type="number"></div>
+          <div class="row"><label>Mythic +1:</label><input type="number"></div>
+          <div class="row"><label>Mythic +2:</label><input type="number"></div>
+          <div class="row"><label>Mythic +3:</label><input type="number"></div>
+          <div class="row"><label>Mythic +4:</label><input type="number"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <br>
+
+  <div class="container">
+    <div class="section">
+      <div class="section-title">Result Item Needed</div>
+      <div class="columns">
+        <div class="column">
+          <h3>S-Item</h3>
+          <div class="result-box" id="r_sbox">
+            <div class="result-value" id="r_sitem">0</div>
+          </div>
+        </div>
+        <div class="column">
+          <h3>Fodder</h3>
+          <div class="result-box" id="r_fbox">
+            <div class="result-value" id="r_fodder">0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer"></div>
+  <script src="layout.js"></script>
+</body>
+
+</html>
