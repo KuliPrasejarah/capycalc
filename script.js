@@ -199,6 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupInputListeners();
     calculate();
 
+document.addEventListener('DOMContentLoaded', () => {
     const headerRight = document.querySelector(".header-right");
     const overlay = document.getElementById("overlay");
     const popup = document.getElementById("popup");
