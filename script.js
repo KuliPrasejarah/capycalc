@@ -199,3 +199,41 @@ document.addEventListener('DOMContentLoaded', () => {
     setupInputListeners();
     calculate();
 });
+
+
+// ===========================================================
+    
+  const overlay = document.getElementById("overlay");
+  const popup = document.getElementById("popup");
+
+  // === Klik kiri: arahkan ke '#' ===
+  if (headerLeft) {
+    headerLeft.addEventListener("click", () => location.href = "#");
+  }
+
+  // === Fungsi buka/tutup popup ===
+  const openPopup = () => {
+    overlay.style.display = "block";
+    popup.style.display = "block";
+    setTimeout(() => {
+      overlay.classList.add("show");
+      popup.classList.add("show");
+    }, 10);
+  };
+
+  const closePopup = () => {
+    overlay.classList.remove("show");
+    popup.classList.remove("show");
+    // delay untuk nunggu animasi hilang dulu
+    setTimeout(() => {
+      overlay.style.display = "none";
+      popup.style.display = "none";
+    }, 300);
+  };
+
+  // === Event listener popup ===
+  if (headerRight && overlay && popup) {
+    headerRight.addEventListener("click", openPopup);
+    overlay.addEventListener("click", closePopup);
+  }
+});
