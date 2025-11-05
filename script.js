@@ -202,7 +202,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // ===========================================================
-    
+
+fetch('credits.html')
+  .then(res => res.text())
+  .then(data => document.getElementById('credits').innerHTML = data)
+  .catch(() => console.error('Credits failed to load'));
+
   const overlay = document.getElementById("overlay");
   const popup = document.getElementById("popup");
 
