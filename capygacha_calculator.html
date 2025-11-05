@@ -13,7 +13,69 @@
 <body>
   <div id="header"></div>
 
-  <div class="container"></div>
+<div class="container">
+
+  <!-- === PANEL 1: Current Info === -->
+  <div class="column">
+    <h3 class="section-title">Current Status</h3>
+
+    <div class="row">
+      <label for="current-floor">Current Floor:</label>
+      <input type="number" id="current-floor" value="0">
+    </div>
+
+    <div class="row">
+      <label for="current-coin">Current Coin:</label>
+      <input type="number" id="current-coin" value="0">
+    </div>
+
+    <div class="row">
+      <label for="achieve-pull">Achieve on X Pull:</label>
+      <input type="number" id="achieve-pull" value="0">
+    </div>
+
+    <div class="row">
+      <label for="current-artifact">Current Artifact ✮:</label>
+      <input type="number" id="current-artifact" value="0">
+    </div>
+  </div>
+
+  <!-- === PANEL 2: Table === -->
+  <div class="column">
+    <h3 class="section-title">Calculation Table</h3>
+
+    <div class="result-box" style="overflow-x:auto;">
+      <table style="border-collapse:collapse; width:100%; min-width:600px;">
+        <thead>
+          <tr style="background-color:rgba(240,240,240,0.9);">
+            <th>To ✮</th>
+            <th>PCS Needed</th>
+            <th>Current Floor</th>
+            <th>Current Coin</th>
+            <th>-Coin</th>
+            <th>-Floor</th>
+            <th>Coin Before Pull</th>
+            <th>Up ✮ on Floor X</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>5</td>
+            <td>10</td>
+            <td>100</td>
+            <td>-20</td>
+            <td>-2</td>
+            <td>80</td>
+            <td>12</td>
+          </tr>
+          <tr><td colspan="8" style="opacity:0.6; text-align:center;">(data lainnya nanti bisa diisi via script.js)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
 
   <div id="footer"></div>
   <script src="layout.js"></script>
