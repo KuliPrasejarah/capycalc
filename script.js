@@ -202,19 +202,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // ===========================================================
-
-fetch('credits.html')
-  .then(res => res.text())
-  .then(data => document.getElementById('credits').innerHTML = data)
-  .catch(() => console.error('Credits failed to load'));
-
+document.addEventListener("DOMContentLoaded", () => {
+  const headerRight = document.querySelector(".header-right");
   const overlay = document.getElementById("overlay");
   const popup = document.getElementById("popup");
-
-  // === Klik kiri: arahkan ke '#' ===
-  if (headerLeft) {
-    headerLeft.addEventListener("click", () => location.href = "#");
-  }
 
   // === Fungsi buka/tutup popup ===
   const openPopup = () => {
