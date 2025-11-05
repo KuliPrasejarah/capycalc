@@ -198,6 +198,7 @@ function calculate() {
 document.addEventListener('DOMContentLoaded', () => {
     setupInputListeners();
     calculate();
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     const headerRight = document.querySelector(".header-right");
