@@ -199,35 +199,3 @@ document.addEventListener('DOMContentLoaded', () => {
     setupInputListeners();
     calculate();
 });
-
-document.addEventListener('DOMContentLoaded', () => {
-    const headerRight = document.querySelector(".header-right");
-    const overlay = document.getElementById("overlay");
-    const popup = document.getElementById("popup");
-
-  // === Fungsi buka/tutup popup ===
-  const openPopup = () => {
-    overlay.style.display = "block";
-    popup.style.display = "block";
-    setTimeout(() => {
-      overlay.classList.add("show");
-      popup.classList.add("show");
-    }, 10);
-  };
-
-  const closePopup = () => {
-    overlay.classList.remove("show");
-    popup.classList.remove("show");
-    // delay untuk nunggu animasi hilang dulu
-    setTimeout(() => {
-      overlay.style.display = "none";
-      popup.style.display = "none";
-    }, 300);
-  };
-
-  // === Event listener popup ===
-  if (headerRight && overlay && popup) {
-    headerRight.addEventListener("click", openPopup);
-    overlay.addEventListener("click", closePopup);
-  }
-});
