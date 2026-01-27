@@ -150,6 +150,7 @@ body {
     padding: 4px 8px;
     font-weight: bold;
     color: #000000;
+    margin: 10px;
 }
 .button:hover {
     background-color: rgba(240, 240, 240, 0.9);
