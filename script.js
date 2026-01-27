@@ -15,13 +15,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const radiusInput = document.getElementById("radiusInput");
   const generateBtn = document.getElementById("generateGridBtn");
 
-  // kalau halaman lain, skip engine grid
   if (!gridContainer) return;
 
   function applySettingsAndReset() {
-    ROWS = parseInt(rowsInput.value);
-    COLS = parseInt(colsInput.value);
-    RADIUS = parseInt(radiusInput.value);
+    ROWS = parseInt(rowsInput.value) || 1;
+    COLS = parseInt(colsInput.value) || 1;
+    RADIUS = parseInt(radiusInput.value) || 0;
     generateGrid();
   }
 
@@ -31,12 +30,10 @@ document.addEventListener("DOMContentLoaded", () => {
     resetTimer = setTimeout(applySettingsAndReset, 120);
   }
 
-  // realtime input update
   rowsInput.addEventListener("input", debounceReset);
   colsInput.addEventListener("input", debounceReset);
   radiusInput.addEventListener("input", debounceReset);
 
-  // mode toggle realtime
   document.querySelectorAll('input[name="mode"]').forEach(radio => {
     radio.addEventListener("change", e => {
       mode = e.target.value;
@@ -44,7 +41,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // tombol generate tetap ada (optional)
   if (generateBtn) {
     generateBtn.addEventListener("click", applySettingsAndReset);
   }
@@ -64,7 +60,6 @@ document.addEventListener("DOMContentLoaded", () => {
       grid[r] = [];
       for (let c = 0; c < COLS; c++) {
         const cell = document.createElement("div");
-        cell.className = "grid-cell";
         cell.dataset.r = r;
         cell.dataset.c = c;
 
@@ -89,10 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function handleClick(r, c) {
     const key = `${r},${c}`;
-
-    // step berikutnya hanya boleh dari area yang sudah hancur
     if (destroyed.size > 0 && !destroyed.has(key)) return;
-
     if (mode === "simulator") {
       destroyArea(r, c);
     } else {
@@ -129,12 +121,8 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    // 🚫 kalau cuma 0 atau 1 kotak, jangan dihancurkan
-    if (gain <= 1) {
-      return false;
-    }
+    if (gain <= 1) return false;
 
-    // ✅ hancurkan area
     affected.forEach(([i, j]) => {
       const key = `${i},${j}`;
       destroyed.add(key);
@@ -142,7 +130,6 @@ document.addEventListener("DOMContentLoaded", () => {
       grid[i][j].style.color = "#fff";
     });
 
-    // ✅ nomor step
     stepCounter++;
     const cell = grid[r][c];
     cell.textContent = stepCounter;
@@ -182,16 +169,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     for (const [r, c] of candidates) {
       const gain = countGain(r, c);
-
-      // ❌ skip titik gak guna
       if (gain <= 1) continue;
 
       const dCenter = dist(r, c, centerX, centerY);
 
-      if (
-        gain > maxGain ||
-        (gain === maxGain && dCenter < bestCenterDist)
-      ) {
+      if (gain > maxGain || (gain === maxGain && dCenter < bestCenterDist)) {
         maxGain = gain;
         best = { r, c };
         bestCenterDist = dCenter;
@@ -218,7 +200,6 @@ document.addEventListener("DOMContentLoaded", () => {
     step();
   }
 
-  // init pertama kali
   generateGrid();
 });
 
