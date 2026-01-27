@@ -13,34 +13,30 @@
 <body>
   <div id="header"></div>
 
-  <div class="container">
-    <div class="section">
-      <div class="panel">
-        <h2>Card Flip Simulator</h2>
-        <div class="setting-table">
-          <div class="setting-row header">
-            <div>Baris</div>
-            <div>Kolom</div>
-            <div>Radius</div>
-          </div>
-          <div class="setting-row">
-            <input type="number" id="rowsInput" value="8" min="1">
-            <input type="number" id="colsInput" value="8" min="1">
-            <input type="number" id="radiusInput" value="1" min="0">
-          </div>
+  <div class="menu-container">
+    <div class="panel">
+      <h2>Card Flip Simulator</h2>
+      <div class="setting-table">
+        <div class="setting-row header">
+          <div>Baris</div>
+          <div>Kolom</div>
+          <div>Radius</div>
         </div>
-        <div class="mode-table">
-          <label><input type="radio" name="mode" value="simulator" checked>Simulator</label>
-          <label><input type="radio" name="mode" value="auto">Auto Path</label>
+        <div class="setting-row">
+          <input type="number" id="rowsInput" value="8" min="1">
+          <input type="number" id="colsInput" value="8" min="1">
+          <input type="number" id="radiusInput" value="1" min="0">
         </div>
-        <button id="generateGridBtn">Reset Board</button>
       </div>
+      <div class="mode-table">
+        <label><input type="radio" name="mode" value="simulator" checked>Simulator</label>
+        <label><input type="radio" name="mode" value="auto">Auto Path</label>
+      </div>
+      <button id="generateGridBtn">Reset Board</button>
     </div>
 
-    <div class="section">
-      <div class="panel">
-        <div id="gridContainer"></div>
-      </div>
+    <div class="panel">
+      <div id="gridContainer"></div>
     </div>
   </div>
 
