@@ -1,11 +1,12 @@
-let ROWS = 9;
-let COLS = 9;
+let ROWS = 8;
+let COLS = 8;
 let RADIUS = 1;
 
 let grid = [];
 let destroyed = new Set();
 let mode = "simulator";
 let lastStep = null;
+let stepCounter = 0;
 
 document.addEventListener("DOMContentLoaded", () => {
   const gridContainer = document.getElementById("gridContainer");
@@ -14,27 +15,47 @@ document.addEventListener("DOMContentLoaded", () => {
   const radiusInput = document.getElementById("radiusInput");
   const generateBtn = document.getElementById("generateGridBtn");
 
-  if (!gridContainer) return; // kalau halaman lain, skip engine
+  // kalau halaman lain, skip engine grid
+  if (!gridContainer) return;
 
-  document.querySelectorAll('input[name="mode"]').forEach(radio => {
-    radio.addEventListener("change", e => {
-      mode = e.target.value;
-    });
-  });
-
-  generateBtn.addEventListener("click", () => {
+  function applySettingsAndReset() {
     ROWS = parseInt(rowsInput.value);
     COLS = parseInt(colsInput.value);
     RADIUS = parseInt(radiusInput.value);
     generateGrid();
+  }
+
+  let resetTimer = null;
+  function debounceReset() {
+    clearTimeout(resetTimer);
+    resetTimer = setTimeout(applySettingsAndReset, 120);
+  }
+
+  // realtime input update
+  rowsInput.addEventListener("input", debounceReset);
+  colsInput.addEventListener("input", debounceReset);
+  radiusInput.addEventListener("input", debounceReset);
+
+  // mode toggle realtime
+  document.querySelectorAll('input[name="mode"]').forEach(radio => {
+    radio.addEventListener("change", e => {
+      mode = e.target.value;
+      applySettingsAndReset();
+    });
   });
+
+  // tombol generate tetap ada (optional)
+  if (generateBtn) {
+    generateBtn.addEventListener("click", applySettingsAndReset);
+  }
 
   function generateGrid() {
     grid = [];
     destroyed.clear();
     lastStep = null;
-    gridContainer.innerHTML = "";
+    stepCounter = 0;
 
+    gridContainer.innerHTML = "";
     gridContainer.style.display = "grid";
     gridContainer.style.gridTemplateColumns = `repeat(${COLS}, 32px)`;
     gridContainer.style.gap = "4px";
@@ -55,7 +76,8 @@ document.addEventListener("DOMContentLoaded", () => {
         cell.style.justifyContent = "center";
         cell.style.cursor = "pointer";
         cell.style.background = "#eee";
-        cell.style.transition = "0.2s";
+        cell.style.transition = "0.15s";
+        cell.style.userSelect = "none";
 
         cell.addEventListener("click", () => handleClick(r, c));
 
@@ -68,6 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function handleClick(r, c) {
     const key = `${r},${c}`;
 
+    // step berikutnya hanya boleh dari area yang sudah hancur
     if (destroyed.size > 0 && !destroyed.has(key)) return;
 
     if (mode === "simulator") {
@@ -75,33 +98,6 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       autoExpand(r, c);
     }
-  }
-
-  function destroyArea(r, c) {
-    for (let i = r - RADIUS; i <= r + RADIUS; i++) {
-      for (let j = c - RADIUS; j <= c + RADIUS; j++) {
-        if (i >= 0 && i < ROWS && j >= 0 && j < COLS) {
-          const key = `${i},${j}`;
-          destroyed.add(key);
-          grid[i][j].style.background = "#000";
-          grid[i][j].style.color = "#fff";
-        }
-      }
-    }
-    lastStep = { r, c };
-  }
-
-  function getCandidates() {
-    if (destroyed.size === 0) {
-      let all = [];
-      for (let r = 0; r < ROWS; r++) {
-        for (let c = 0; c < COLS; c++) {
-          all.push([r, c]);
-        }
-      }
-      return all;
-    }
-    return Array.from(destroyed).map(s => s.split(",").map(Number));
   }
 
   function countGain(r, c) {
@@ -117,8 +113,61 @@ document.addEventListener("DOMContentLoaded", () => {
     return gain;
   }
 
+  function destroyArea(r, c) {
+    let gain = 0;
+    let affected = [];
+
+    for (let i = r - RADIUS; i <= r + RADIUS; i++) {
+      for (let j = c - RADIUS; j <= c + RADIUS; j++) {
+        if (i >= 0 && i < ROWS && j >= 0 && j < COLS) {
+          const key = `${i},${j}`;
+          if (!destroyed.has(key)) {
+            gain++;
+            affected.push([i, j]);
+          }
+        }
+      }
+    }
+
+    // 🚫 kalau cuma 0 atau 1 kotak, jangan dihancurkan
+    if (gain <= 1) {
+      return false;
+    }
+
+    // ✅ hancurkan area
+    affected.forEach(([i, j]) => {
+      const key = `${i},${j}`;
+      destroyed.add(key);
+      grid[i][j].style.background = "#000";
+      grid[i][j].style.color = "#fff";
+    });
+
+    // ✅ nomor step
+    stepCounter++;
+    const cell = grid[r][c];
+    cell.textContent = stepCounter;
+    cell.style.fontWeight = "bold";
+    cell.style.color = "#ff3333";
+
+    lastStep = { r, c };
+    return true;
+  }
+
   function dist(a, b, c, d) {
     return Math.hypot(a - c, b - d);
+  }
+
+  function getCandidates() {
+    if (destroyed.size === 0) {
+      let all = [];
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          all.push([r, c]);
+        }
+      }
+      return all;
+    }
+    return Array.from(destroyed).map(s => s.split(",").map(Number));
   }
 
   function findBestStep() {
@@ -127,27 +176,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let best = null;
     let maxGain = -1;
-    let bestDist = Infinity;
-    let bestSpread = -Infinity;
+    let bestCenterDist = Infinity;
 
     const candidates = getCandidates();
 
     for (const [r, c] of candidates) {
       const gain = countGain(r, c);
-      if (gain === 0) continue;
+
+      // ❌ skip titik gak guna
+      if (gain <= 1) continue;
 
       const dCenter = dist(r, c, centerX, centerY);
-      const dLast = lastStep ? dist(r, c, lastStep.r, lastStep.c) : 0;
 
       if (
         gain > maxGain ||
-        (gain === maxGain && dCenter < bestDist) ||
-        (gain === maxGain && dCenter === bestDist && dLast > bestSpread)
+        (gain === maxGain && dCenter < bestCenterDist)
       ) {
         maxGain = gain;
         best = { r, c };
-        bestDist = dCenter;
-        bestSpread = dLast;
+        bestCenterDist = dCenter;
       }
     }
 
@@ -155,18 +202,23 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function autoExpand(r, c) {
-    destroyArea(r, c);
+    const ok = destroyArea(r, c);
+    if (!ok) return;
 
     function step() {
       const best = findBestStep();
       if (!best) return;
-      destroyArea(best.r, best.c);
+
+      const success = destroyArea(best.r, best.c);
+      if (!success) return;
+
       setTimeout(step, 120);
     }
 
     step();
   }
 
+  // init pertama kali
   generateGrid();
 });
 
