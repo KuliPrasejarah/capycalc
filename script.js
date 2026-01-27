@@ -126,7 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
     affected.forEach(([i, j]) => {
       const key = `${i},${j}`;
       destroyed.add(key);
-      grid[i][j].style.background = "#000";
+      grid[i][j].style.background = "rgba(0, 0, 0, 0.3)";
       grid[i][j].style.color = "#fff";
     });
 
