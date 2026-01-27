@@ -269,6 +269,8 @@ h1 {
     margin: 20px auto;
     width: auto;
     backdrop-filter: blur(6px);
+    align-items: center;
+    justify-content: center;
 }
 .panel h2 {
     text-align: center;
