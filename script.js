@@ -8,7 +8,6 @@ let mode = "simulator";
 let stepCounter = 0;
 let autoTimer = null;
 
-// speed dalam ms (x1 = 400ms)
 let baseSpeed = 400;
 let speedMultiplier = 1;
 let autoSpeed = baseSpeed / speedMultiplier;
@@ -22,8 +21,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const speedSelect = document.getElementById("speedSelect");
 
   if (!gridContainer) return;
-
-  // ================= SETTINGS =================
 
   function applySettings() {
     ROWS = parseInt(rowsInput.value) || 1;
@@ -53,18 +50,11 @@ document.addEventListener("DOMContentLoaded", () => {
     radio.addEventListener("change", e => {
       mode = e.target.value;
       resetGridState();
-
-      if (generateBtn) {
-        generateBtn.style.display = mode === "auto" ? "none" : "inline-block";
-      }
+      if (generateBtn) generateBtn.style.display = mode === "auto" ? "none" : "inline-block";
     });
   });
 
-  if (generateBtn) {
-    generateBtn.addEventListener("click", resetGridState);
-  }
-
-  // ================= GRID BUILD =================
+  if (generateBtn) generateBtn.addEventListener("click", resetGridState);
 
   function buildGrid() {
     grid = [];
@@ -77,9 +67,6 @@ document.addEventListener("DOMContentLoaded", () => {
       grid[r] = [];
       for (let c = 0; c < COLS; c++) {
         const cell = document.createElement("div");
-        cell.dataset.r = r;
-        cell.dataset.c = c;
-
         Object.assign(cell.style, {
           width: "32px",
           height: "32px",
@@ -93,27 +80,18 @@ document.addEventListener("DOMContentLoaded", () => {
           userSelect: "none",
           fontSize: "13px"
         });
-
         cell.addEventListener("click", () => handleClick(r, c));
-
         gridContainer.appendChild(cell);
         grid[r][c] = cell;
       }
     }
-
     resetGridState();
   }
-
-  // ================= RESET =================
 
   function resetGridState() {
     destroyed.clear();
     stepCounter = 0;
-
-    if (autoTimer) {
-      clearTimeout(autoTimer);
-      autoTimer = null;
-    }
+    if (autoTimer) clearTimeout(autoTimer);
 
     for (let r = 0; r < ROWS; r++) {
       for (let c = 0; c < COLS; c++) {
@@ -127,8 +105,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // ================= CLICK =================
-
   function handleClick(r, c) {
     const key = `${r},${c}`;
 
@@ -139,15 +115,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     resetGridState();
-    highlightStart(r, c);
+    grid[r][c].style.outline = "3px solid #888";
     autoExpand(r, c);
   }
-
-  function highlightStart(r, c) {
-    grid[r][c].style.outline = "3px solid orange";
-  }
-
-  // ================= LOGIC =================
 
   function countGain(r, c) {
     let gain = 0;
@@ -183,7 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
     affected.forEach(([i, j]) => {
       const key = `${i},${j}`;
       destroyed.add(key);
-      grid[i][j].style.background = getStepColor(stepCounter);
+      grid[i][j].style.background = getGray(stepCounter);
       grid[i][j].style.color = "#fff";
     });
 
@@ -191,14 +161,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const cell = grid[r][c];
     cell.textContent = stepCounter;
     cell.style.fontWeight = "bold";
-    cell.style.color = "#ff3333";
+    cell.style.color = "#222";
 
     return true;
   }
 
-  function getStepColor(step) {
-    const hue = (step * 35) % 360;
-    return `hsla(${hue}, 70%, 30%, 0.35)`;
+  function getGray(step) {
+    const maxSteps = ROWS * COLS;
+    const intensity = Math.min(0.35 + (step / maxSteps) * 0.5, 0.85);
+    const gray = Math.floor(255 * (1 - intensity));
+    return `rgb(${gray},${gray},${gray})`;
   }
 
   function dist(a, b, c, d) {
@@ -226,9 +198,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let maxGain = -1;
     let bestCenterDist = Infinity;
 
-    const candidates = getCandidates();
-
-    for (const [r, c] of candidates) {
+    for (const [r, c] of getCandidates()) {
       const gain = countGain(r, c);
       if (gain <= 1) continue;
 
@@ -245,16 +215,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function autoExpand(r, c) {
-    const ok = destroyArea(r, c);
-    if (!ok) return;
+    if (!destroyArea(r, c)) return;
 
     function step() {
       const best = findBestStep();
       if (!best) return;
-
-      const success = destroyArea(best.r, best.c);
-      if (!success) return;
-
+      if (!destroyArea(best.r, best.c)) return;
       autoTimer = setTimeout(step, autoSpeed);
     }
 
