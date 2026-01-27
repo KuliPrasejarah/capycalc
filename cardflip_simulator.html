@@ -29,9 +29,12 @@
                 <input type="number" id="radiusInput" value="1" min="0">
             </div>
             <div class="row">
-                <label>Auto Speed :</label>
-                <input type="range" id="speedInput" min="20" max="300" value="120">
-                <span id="speedValue">120 ms</span>
+                <label>Speed :</label>
+                <select id="speedSelect">
+                    <option value="0.5">x0.5</option>
+                    <option value="1" selected>x1</option>
+                    <option value="2">x2</option>
+                </select>
             </div>
             <br>
             <div class="info-grid">
