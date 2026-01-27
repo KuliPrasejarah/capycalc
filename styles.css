@@ -143,13 +143,11 @@ body {
 .button {
     background-color: rgba(255, 255, 255, 0.9);
     border: 2px solid #808080;
-    border-radius: 8px;
-    align-items: center;
-    justify-content: center;
+    border-radius: 3px;
     text-align: center;
     cursor: pointer;
     transition: 0.2s;
-    padding: 10px;
+    padding: 4px 8px;
     font-weight: bold;
     color: #000000;
 }
