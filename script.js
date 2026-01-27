@@ -5,10 +5,13 @@ let RADIUS = 1;
 let grid = [];
 let destroyed = new Set();
 let mode = "simulator";
-let lastStep = null;
 let stepCounter = 0;
 let autoTimer = null;
-let autoSpeed = 120;
+
+// speed dalam ms (x1 = 400ms)
+let baseSpeed = 400;
+let speedMultiplier = 1;
+let autoSpeed = baseSpeed / speedMultiplier;
 
 document.addEventListener("DOMContentLoaded", () => {
   const gridContainer = document.getElementById("gridContainer");
@@ -16,9 +19,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const colsInput = document.getElementById("colsInput");
   const radiusInput = document.getElementById("radiusInput");
   const generateBtn = document.getElementById("generateGridBtn");
-  const speedInput = document.getElementById("speedInput"); // optional slider
+  const speedSelect = document.getElementById("speedSelect");
 
   if (!gridContainer) return;
+
+  // ================= SETTINGS =================
 
   function applySettings() {
     ROWS = parseInt(rowsInput.value) || 1;
@@ -30,16 +35,17 @@ document.addEventListener("DOMContentLoaded", () => {
   let resetTimer = null;
   function debounceApply() {
     clearTimeout(resetTimer);
-    resetTimer = setTimeout(applySettings, 120);
+    resetTimer = setTimeout(applySettings, 150);
   }
 
   rowsInput.addEventListener("input", debounceApply);
   colsInput.addEventListener("input", debounceApply);
   radiusInput.addEventListener("input", debounceApply);
 
-  if (speedInput) {
-    speedInput.addEventListener("input", e => {
-      autoSpeed = parseInt(e.target.value) || 120;
+  if (speedSelect) {
+    speedSelect.addEventListener("change", e => {
+      speedMultiplier = parseFloat(e.target.value);
+      autoSpeed = baseSpeed / speedMultiplier;
     });
   }
 
@@ -98,11 +104,10 @@ document.addEventListener("DOMContentLoaded", () => {
     resetGridState();
   }
 
-  // ================= RESET STATE =================
+  // ================= RESET =================
 
   function resetGridState() {
     destroyed.clear();
-    lastStep = null;
     stepCounter = 0;
 
     if (autoTimer) {
@@ -122,7 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // ================= CLICK HANDLER =================
+  // ================= CLICK =================
 
   function handleClick(r, c) {
     const key = `${r},${c}`;
@@ -133,18 +138,16 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // AUTO MODE → reset & start from clicked cell
     resetGridState();
     highlightStart(r, c);
     autoExpand(r, c);
   }
 
   function highlightStart(r, c) {
-    const cell = grid[r][c];
-    cell.style.outline = "3px solid orange";
+    grid[r][c].style.outline = "3px solid orange";
   }
 
-  // ================= CORE LOGIC =================
+  // ================= LOGIC =================
 
   function countGain(r, c) {
     let gain = 0;
@@ -160,8 +163,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function destroyArea(r, c) {
-    let gain = 0;
     let affected = [];
+    let gain = 0;
 
     for (let i = r - RADIUS; i <= r + RADIUS; i++) {
       for (let j = c - RADIUS; j <= c + RADIUS; j++) {
@@ -190,7 +193,6 @@ document.addEventListener("DOMContentLoaded", () => {
     cell.style.fontWeight = "bold";
     cell.style.color = "#ff3333";
 
-    lastStep = { r, c };
     return true;
   }
 
@@ -261,14 +263,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   buildGrid();
 });
-
-const speedValue = document.getElementById("speedValue");
-if (speedInput) {
-  speedInput.addEventListener("input", e => {
-    autoSpeed = parseInt(e.target.value) || 120;
-    if (speedValue) speedValue.textContent = autoSpeed + " ms";
-  });
-}
 
 const CONVERSION_TABLE = {
     'Epic +0': [1, 0],
