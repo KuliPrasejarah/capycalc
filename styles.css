@@ -151,6 +151,7 @@ body {
     font-weight: bold;
     color: #000000;
     margin: 10px;
+    width: auto;
 }
 .button:hover {
     background-color: rgba(240, 240, 240, 0.9);
