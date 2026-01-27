@@ -447,23 +447,20 @@ h1 {
 }
 
 .manu-container {
+  flex: 1;
   display: flex;
-  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
   gap: 20px;
-  align-items: flex-start;
 }
 
 .manu-container .panel {
-  width: auto !important;
+  width: auto;
   flex: 1 1 360px;
 }
 
 @media screen and (max-width: 700px) {
-  .manu-container {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
   .manu-container .panel {
     width: 100%;
   }
