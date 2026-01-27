@@ -1,3 +1,175 @@
+let ROWS = 9;
+let COLS = 9;
+let RADIUS = 1;
+
+let grid = [];
+let destroyed = new Set();
+let mode = "simulator";
+let lastStep = null;
+
+document.addEventListener("DOMContentLoaded", () => {
+  const gridContainer = document.getElementById("gridContainer");
+  const rowsInput = document.getElementById("rowsInput");
+  const colsInput = document.getElementById("colsInput");
+  const radiusInput = document.getElementById("radiusInput");
+  const generateBtn = document.getElementById("generateGridBtn");
+
+  if (!gridContainer) return; // kalau halaman lain, skip engine
+
+  document.querySelectorAll('input[name="mode"]').forEach(radio => {
+    radio.addEventListener("change", e => {
+      mode = e.target.value;
+    });
+  });
+
+  generateBtn.addEventListener("click", () => {
+    ROWS = parseInt(rowsInput.value);
+    COLS = parseInt(colsInput.value);
+    RADIUS = parseInt(radiusInput.value);
+    generateGrid();
+  });
+
+  function generateGrid() {
+    grid = [];
+    destroyed.clear();
+    lastStep = null;
+    gridContainer.innerHTML = "";
+
+    gridContainer.style.display = "grid";
+    gridContainer.style.gridTemplateColumns = `repeat(${COLS}, 32px)`;
+    gridContainer.style.gap = "4px";
+
+    for (let r = 0; r < ROWS; r++) {
+      grid[r] = [];
+      for (let c = 0; c < COLS; c++) {
+        const cell = document.createElement("div");
+        cell.className = "grid-cell";
+        cell.dataset.r = r;
+        cell.dataset.c = c;
+
+        cell.style.width = "32px";
+        cell.style.height = "32px";
+        cell.style.border = "1px solid #555";
+        cell.style.display = "flex";
+        cell.style.alignItems = "center";
+        cell.style.justifyContent = "center";
+        cell.style.cursor = "pointer";
+        cell.style.background = "#eee";
+        cell.style.transition = "0.2s";
+
+        cell.addEventListener("click", () => handleClick(r, c));
+
+        gridContainer.appendChild(cell);
+        grid[r][c] = cell;
+      }
+    }
+  }
+
+  function handleClick(r, c) {
+    const key = `${r},${c}`;
+
+    if (destroyed.size > 0 && !destroyed.has(key)) return;
+
+    if (mode === "simulator") {
+      destroyArea(r, c);
+    } else {
+      autoExpand(r, c);
+    }
+  }
+
+  function destroyArea(r, c) {
+    for (let i = r - RADIUS; i <= r + RADIUS; i++) {
+      for (let j = c - RADIUS; j <= c + RADIUS; j++) {
+        if (i >= 0 && i < ROWS && j >= 0 && j < COLS) {
+          const key = `${i},${j}`;
+          destroyed.add(key);
+          grid[i][j].style.background = "#000";
+          grid[i][j].style.color = "#fff";
+        }
+      }
+    }
+    lastStep = { r, c };
+  }
+
+  function getCandidates() {
+    if (destroyed.size === 0) {
+      let all = [];
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          all.push([r, c]);
+        }
+      }
+      return all;
+    }
+    return Array.from(destroyed).map(s => s.split(",").map(Number));
+  }
+
+  function countGain(r, c) {
+    let gain = 0;
+    for (let i = r - RADIUS; i <= r + RADIUS; i++) {
+      for (let j = c - RADIUS; j <= c + RADIUS; j++) {
+        if (i >= 0 && i < ROWS && j >= 0 && j < COLS) {
+          const key = `${i},${j}`;
+          if (!destroyed.has(key)) gain++;
+        }
+      }
+    }
+    return gain;
+  }
+
+  function dist(a, b, c, d) {
+    return Math.hypot(a - c, b - d);
+  }
+
+  function findBestStep() {
+    const centerX = (ROWS - 1) / 2;
+    const centerY = (COLS - 1) / 2;
+
+    let best = null;
+    let maxGain = -1;
+    let bestDist = Infinity;
+    let bestSpread = -Infinity;
+
+    const candidates = getCandidates();
+
+    for (const [r, c] of candidates) {
+      const gain = countGain(r, c);
+      if (gain === 0) continue;
+
+      const dCenter = dist(r, c, centerX, centerY);
+      const dLast = lastStep ? dist(r, c, lastStep.r, lastStep.c) : 0;
+
+      if (
+        gain > maxGain ||
+        (gain === maxGain && dCenter < bestDist) ||
+        (gain === maxGain && dCenter === bestDist && dLast > bestSpread)
+      ) {
+        maxGain = gain;
+        best = { r, c };
+        bestDist = dCenter;
+        bestSpread = dLast;
+      }
+    }
+
+    return best;
+  }
+
+  function autoExpand(r, c) {
+    destroyArea(r, c);
+
+    function step() {
+      const best = findBestStep();
+      if (!best) return;
+      destroyArea(best.r, best.c);
+      setTimeout(step, 120);
+    }
+
+    step();
+  }
+
+  generateGrid();
+});
+
 const CONVERSION_TABLE = {
     'Epic +0': [1, 0],
     'Epic +1': [1, 1],
