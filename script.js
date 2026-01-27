@@ -262,6 +262,14 @@ document.addEventListener("DOMContentLoaded", () => {
   buildGrid();
 });
 
+const speedValue = document.getElementById("speedValue");
+if (speedInput) {
+  speedInput.addEventListener("input", e => {
+    autoSpeed = parseInt(e.target.value) || 120;
+    if (speedValue) speedValue.textContent = autoSpeed + " ms";
+  });
+}
+
 const CONVERSION_TABLE = {
     'Epic +0': [1, 0],
     'Epic +1': [1, 1],
