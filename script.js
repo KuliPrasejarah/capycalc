@@ -7,6 +7,8 @@ let destroyed = new Set();
 let mode = "simulator";
 let lastStep = null;
 let stepCounter = 0;
+let autoTimer = null;
+let autoSpeed = 120;
 
 document.addEventListener("DOMContentLoaded", () => {
   const gridContainer = document.getElementById("gridContainer");
@@ -14,43 +16,52 @@ document.addEventListener("DOMContentLoaded", () => {
   const colsInput = document.getElementById("colsInput");
   const radiusInput = document.getElementById("radiusInput");
   const generateBtn = document.getElementById("generateGridBtn");
+  const speedInput = document.getElementById("speedInput"); // optional slider
 
   if (!gridContainer) return;
 
-  function applySettingsAndReset() {
+  function applySettings() {
     ROWS = parseInt(rowsInput.value) || 1;
     COLS = parseInt(colsInput.value) || 1;
     RADIUS = parseInt(radiusInput.value) || 0;
-    generateGrid();
+    buildGrid();
   }
 
   let resetTimer = null;
-  function debounceReset() {
+  function debounceApply() {
     clearTimeout(resetTimer);
-    resetTimer = setTimeout(applySettingsAndReset, 120);
+    resetTimer = setTimeout(applySettings, 120);
   }
 
-  rowsInput.addEventListener("input", debounceReset);
-  colsInput.addEventListener("input", debounceReset);
-  radiusInput.addEventListener("input", debounceReset);
+  rowsInput.addEventListener("input", debounceApply);
+  colsInput.addEventListener("input", debounceApply);
+  radiusInput.addEventListener("input", debounceApply);
+
+  if (speedInput) {
+    speedInput.addEventListener("input", e => {
+      autoSpeed = parseInt(e.target.value) || 120;
+    });
+  }
 
   document.querySelectorAll('input[name="mode"]').forEach(radio => {
     radio.addEventListener("change", e => {
       mode = e.target.value;
-      applySettingsAndReset();
+      resetGridState();
+
+      if (generateBtn) {
+        generateBtn.style.display = mode === "auto" ? "none" : "inline-block";
+      }
     });
   });
 
   if (generateBtn) {
-    generateBtn.addEventListener("click", applySettingsAndReset);
+    generateBtn.addEventListener("click", resetGridState);
   }
 
-  function generateGrid() {
-    grid = [];
-    destroyed.clear();
-    lastStep = null;
-    stepCounter = 0;
+  // ================= GRID BUILD =================
 
+  function buildGrid() {
+    grid = [];
     gridContainer.innerHTML = "";
     gridContainer.style.display = "grid";
     gridContainer.style.gridTemplateColumns = `repeat(${COLS}, 32px)`;
@@ -63,16 +74,19 @@ document.addEventListener("DOMContentLoaded", () => {
         cell.dataset.r = r;
         cell.dataset.c = c;
 
-        cell.style.width = "32px";
-        cell.style.height = "32px";
-        cell.style.border = "1px solid #555";
-        cell.style.display = "flex";
-        cell.style.alignItems = "center";
-        cell.style.justifyContent = "center";
-        cell.style.cursor = "pointer";
-        cell.style.background = "#eee";
-        cell.style.transition = "0.15s";
-        cell.style.userSelect = "none";
+        Object.assign(cell.style, {
+          width: "32px",
+          height: "32px",
+          border: "1px solid #555",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer",
+          background: "#eee",
+          transition: "0.15s",
+          userSelect: "none",
+          fontSize: "13px"
+        });
 
         cell.addEventListener("click", () => handleClick(r, c));
 
@@ -80,17 +94,57 @@ document.addEventListener("DOMContentLoaded", () => {
         grid[r][c] = cell;
       }
     }
+
+    resetGridState();
   }
+
+  // ================= RESET STATE =================
+
+  function resetGridState() {
+    destroyed.clear();
+    lastStep = null;
+    stepCounter = 0;
+
+    if (autoTimer) {
+      clearTimeout(autoTimer);
+      autoTimer = null;
+    }
+
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        const cell = grid[r][c];
+        cell.style.background = "#eee";
+        cell.style.color = "#000";
+        cell.textContent = "";
+        cell.style.fontWeight = "normal";
+        cell.style.outline = "none";
+      }
+    }
+  }
+
+  // ================= CLICK HANDLER =================
 
   function handleClick(r, c) {
     const key = `${r},${c}`;
-    if (destroyed.size > 0 && !destroyed.has(key)) return;
+
     if (mode === "simulator") {
+      if (destroyed.size > 0 && !destroyed.has(key)) return;
       destroyArea(r, c);
-    } else {
-      autoExpand(r, c);
+      return;
     }
+
+    // AUTO MODE → reset & start from clicked cell
+    resetGridState();
+    highlightStart(r, c);
+    autoExpand(r, c);
   }
+
+  function highlightStart(r, c) {
+    const cell = grid[r][c];
+    cell.style.outline = "3px solid orange";
+  }
+
+  // ================= CORE LOGIC =================
 
   function countGain(r, c) {
     let gain = 0;
@@ -126,7 +180,7 @@ document.addEventListener("DOMContentLoaded", () => {
     affected.forEach(([i, j]) => {
       const key = `${i},${j}`;
       destroyed.add(key);
-      grid[i][j].style.background = "rgba(0, 0, 0, 0.3)";
+      grid[i][j].style.background = getStepColor(stepCounter);
       grid[i][j].style.color = "#fff";
     });
 
@@ -138,6 +192,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     lastStep = { r, c };
     return true;
+  }
+
+  function getStepColor(step) {
+    const hue = (step * 35) % 360;
+    return `hsla(${hue}, 70%, 30%, 0.35)`;
   }
 
   function dist(a, b, c, d) {
@@ -194,13 +253,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const success = destroyArea(best.r, best.c);
       if (!success) return;
 
-      setTimeout(step, 120);
+      autoTimer = setTimeout(step, autoSpeed);
     }
 
     step();
   }
 
-  generateGrid();
+  buildGrid();
 });
 
 const CONVERSION_TABLE = {
