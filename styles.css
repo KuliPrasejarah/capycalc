@@ -22,7 +22,6 @@ body {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(4px);
     flex-wrap: wrap;
-    /* biar gak tumpuk pas layar kecil */
     gap: 10px;
 }
 .header h1 {
@@ -268,7 +267,7 @@ h1 {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     padding: 12px 16px;
     margin: 20px auto;
-    min-width: 300px;
+    min-width: 400px;
     backdrop-filter: blur(6px);
     align-items: center;
     justify-content: center;
