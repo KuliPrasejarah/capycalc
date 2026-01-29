@@ -4,12 +4,14 @@
     box-sizing: border-box;
 }
 body {
+    display: flex;
+    justify-content: center;   /* horizontal */
+    align-items: center;       /* vertical */
+    min-height: 100vh;         /* tinggi body = tinggi layar */
+    margin: 0;
     background: url('capybg.jpg') no-repeat center center fixed;
     background-size: cover;
-    margin: 0;
-    display: flex;
     flex-direction: column;
-    min-height: 100vh !important;
     color: #000;
 }
 /* === Header (Fixed & Clean Version) === */
