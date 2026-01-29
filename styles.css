@@ -186,7 +186,7 @@ h1 {
     flex-wrap: wrap;
 }
 .section {
-    margin-bottom: 20px;
+    margin: 20px;
 }
 .section-title {
     text-align: center;
