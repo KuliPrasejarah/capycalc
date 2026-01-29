@@ -5,9 +5,7 @@
 }
 body {
     display: flex;
-    justify-content: center;   /* horizontal */
-    align-items: center;       /* vertical */
-    min-height: 100vh;         /* tinggi body = tinggi layar */
+    min-height: 100vh;
     margin: 0;
     background: url('capybg.jpg') no-repeat center center fixed;
     background-size: cover;
