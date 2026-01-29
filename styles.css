@@ -267,7 +267,7 @@ h1 {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     padding: 16px;
     margin: 20px auto;
-    min-width: 400px;
+    width: auto;
     backdrop-filter: blur(6px);
     align-items: center;
     justify-content: center;
