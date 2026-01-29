@@ -247,6 +247,10 @@ h1 {
     text-align: center;
     background-color: rgba(255, 255, 255, 0.8);
 }
+.row.center {
+  display: flex;
+  justify-content: center;
+}
 /* === Result Box === */
 .result-box {
     background-color: rgba(255, 255, 255, 0.9);
@@ -278,6 +282,7 @@ h1 {
     margin-bottom: 16px;
     font-size: 1.4em;
 }
+
 /* === Grid untuk Panel 1 === */
 .info-grid {
     display: grid;
