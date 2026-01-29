@@ -11,8 +11,6 @@ body {
     flex-direction: column;
     min-height: 100vh;
     color: #000;
-    justify-content: center;   /* horizontal center */
-    align-items: center;       /* vertical center */
 }
 /* === Header (Fixed & Clean Version) === */
 .header {
