@@ -4,7 +4,7 @@ let RADIUS = 1;
 
 let grid = [];
 let destroyed = new Set();
-let mode = "simulator";
+let mode = "auto";
 let stepCounter = 0;
 let autoTimer = null;
 
