@@ -9,7 +9,7 @@ let stepCounter = 0;
 let autoTimer = null;
 
 let baseSpeed = 400;
-let speedMultiplier = 1;
+let speedMultiplier = 2;
 let autoSpeed = baseSpeed / speedMultiplier;
 
 document.addEventListener("DOMContentLoaded", () => {
