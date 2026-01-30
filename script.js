@@ -61,15 +61,15 @@ document.addEventListener("DOMContentLoaded", () => {
     gridContainer.innerHTML = "";
     gridContainer.style.display = "grid";
     gridContainer.style.gridTemplateColumns = `repeat(${COLS}, 32px)`;
-    gridContainer.style.gap = "4px";
+    gridContainer.style.gap = "16px";
 
     for (let r = 0; r < ROWS; r++) {
       grid[r] = [];
       for (let c = 0; c < COLS; c++) {
         const cell = document.createElement("div");
         Object.assign(cell.style, {
-          width: "32px",
-          height: "32px",
+          width: "40px",
+          height: "40px",
           border: "1px solid #555",
           display: "flex",
           alignItems: "center",
